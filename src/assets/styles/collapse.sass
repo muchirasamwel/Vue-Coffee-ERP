@@ -1,0 +1,45 @@
+input
+  position: absolute
+  opacity: 0
+  z-index: -1
+
+.tab
+  width: 100%
+  color: white
+  overflow: hidden
+
+.tab-label
+  display: flex
+  justify-content: space-between
+  font-weight: bold
+  cursor: pointer
+  min-width: 220px
+  &::after
+    content: "\2192"
+    text-align: center
+    transition: all 0.9s
+
+.tab-content
+  max-height: 0
+  color: white
+  transition: all 0.35s
+  text-align: left
+  cursor: pointer
+
+.tab-close
+  display: flex
+  justify-content: flex-end
+  padding: 1em
+  font-size: 0.75em
+  cursor: pointer
+
+input:checked
+  + .tab-label
+    //background: #1a252f
+    &::after
+      transform: rotate(90deg)
+      //content: "#"
+
+  ~ .tab-content
+    max-height: 100vh
+    //padding: 1em

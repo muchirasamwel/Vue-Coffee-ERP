@@ -1,0 +1,176 @@
+@import "mixins"
+@import "variables"
+@mixin nav-shadow
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.1), 0 2px 10px 0 rgba(0, 0, 0, 0.19)
+
+.sidenav
+  width: 55px
+  position: fixed
+  z-index: 2
+  color: white
+  top: 0
+  left: 0
+  transition: 0.5s
+  height: 100vh
+  .collapse-btn
+    background-color: #00c18b
+    position: absolute
+    height: 30px
+    line-height: 30px
+    bottom: 0
+    z-index: 3
+    width: 100%
+    font-size: 30px
+    cursor: pointer
+  .side-top
+    background-color: #f7f7f7
+    .side-header
+      height: 50px
+      @include center-hor-ver
+      justify-content: space-between
+      text-align: center
+      padding: 0 10px
+      .brand-name
+        @include center-hor-ver
+        color: black
+        .logo
+          @include center-hor-ver
+        .name
+          @include center-hor-ver
+          margin-left: 10px
+          font-size: 20px
+          font-weight: bold
+          color: $secondary-color
+      .close-btn
+        color: black
+        bottom: 40px
+        cursor: pointer
+        @include center-hor-ver
+        border-radius: 50%
+        padding: 0
+        height: 40px
+        width: 40px
+        background-color: $hover-color
+
+      .icon
+        font-weight: bold
+      .toggle-icon
+        @include center-hor-ver
+        height: 50px
+        width: 50px
+  .sub-dept
+    color: black
+    font-weight: bold
+    font-size: 16px
+    width: 100%
+    height: 30px
+    @include center-hor
+    margin-left: 20px
+    color: $primary-color
+  .content-body
+    background-color: #f7f7f7
+    .content-wrap
+      border-top-right-radius: 50px
+      background-color: #6f4e37
+      padding-top: 10px
+      overflow-y: auto
+      height: 100vh
+      .side-nav-item
+        display: flex
+        padding: 5px
+        .item-icon
+          min-width: 50px
+          height: 30px
+          @include center-hor-ver
+          margin-right: 10px
+          cursor: pointer
+          .icon
+            color: white
+
+        .item-label
+          font-weight: bold
+          @include center-hor-ver
+
+.top-bar
+  position: fixed
+  top: 0
+  justify-content: space-between
+  height: 50px
+  width: 100%
+  background-color: #f7f7f7
+  z-index: 2
+  @include nav-shadow
+  @include center-hor
+
+  .left-side
+    padding-left: 10px
+    @include center-hor
+    .toggle-icon
+      color: black
+      bottom: 40px
+      cursor: pointer
+      align-content: center
+      //border-radius: 50%
+      line-height: 40px
+      padding: 0
+      height: 40px
+      width: 40px
+      background-color: $hover-color
+      margin-left: 300px
+      display: block
+
+      .icon
+        font-weight: bold
+    .brand
+      margin-left: 60px
+      cursor: pointer
+      font-size: 30px
+      font-weight: bold
+      @include center-hor-ver
+      color: black
+      .logo
+        @include center-hor-ver
+      .name
+        @include center-hor-ver
+        margin-left: 10px
+        font-size: 30px
+        font-weight: bold
+        color: $secondary-color
+
+  .right-side
+    padding-right: 10px
+    @include center-hor
+
+    .active-user
+      @include center-hor-ver
+      cursor: pointer
+
+    .notification
+      @include center-hor-ver
+      margin-right: 15px
+      cursor: pointer
+      border-radius: 50%
+      height: 30px
+      width: 30px
+      background-color: $hover-color
+
+@media only screen and (max-width: 450px)
+  .sidenav
+    width: 0
+  .top-bar
+    position: fixed
+    top: 0
+    width: 100%
+    .left-side
+      .toggle-icon
+        display: none
+      .brand
+        margin-left: 40px
+        @include center-hor-ver
+        color: black
+        .name
+          font-size: 20px
+
+
+//@media only screen and (max-width: 768px)
+
