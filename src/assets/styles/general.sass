@@ -1,5 +1,12 @@
 @import "mixins"
 @import "variables"
+.tx-center
+  text-align: center
+.pri-color
+  background-color: $primary-color
+.sec-color
+  background-color: $secondary-color
+  color: white
 .content-slot
   height: 100%
   position: relative
@@ -10,8 +17,35 @@
   padding: 10px
   .content-wrapper
     overflow: auto
+    padding: 8px
+    border-radius: 8px
 .the-card
   @include shadow
+.search-input
+  border: 2px solid #e3e6eb
+  height: 30px
+  border-radius: 8px
+  outline: none
+  padding: 3px
+  cursor: pointer
+.the-btn
+  outline: none
+  border: none
+  @include shadow
+  border-radius: 8px
+  height: 30px
+  padding: 3px 6px
+.pagination-footer
+  justify-content: space-between
+  padding: 0 10px
+  @include center-hor
+.pagination-btn
+  background-color: $hover-color
+  color: black
+  @include center-hor-ver
+  height: 20px
+  font-weight: bold
+  cursor: pointer
 
 @media only screen and (max-width: 450px)
   .content-slot

@@ -3,44 +3,47 @@
 @mixin nav-shadow
   box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.1), 0 2px 10px 0 rgba(0, 0, 0, 0.19)
 
+.active , .side-nav-item:hover
+  background-color: $background-color
+  border-top: 2px solid $hover-color
+  .item-icon
+    color: black
+  .item-label
+    color: black
+
 .sidenav
   width: 55px
   position: fixed
   z-index: 2
-  color: white
   top: 0
   left: 0
   transition: 0.5s
   height: 100vh
-  .collapse-btn
-    background-color: #00c18b
-    position: absolute
-    height: 30px
-    line-height: 30px
-    bottom: 0
-    z-index: 3
-    width: 100%
-    font-size: 30px
-    cursor: pointer
+
   .side-top
     background-color: #f7f7f7
+
     .side-header
       height: 50px
       @include center-hor-ver
       justify-content: space-between
       text-align: center
       padding: 0 10px
+
       .brand-name
         @include center-hor-ver
         color: black
+
         .logo
           @include center-hor-ver
+
         .name
           @include center-hor-ver
           margin-left: 10px
           font-size: 20px
           font-weight: bold
           color: $secondary-color
+
       .close-btn
         color: black
         bottom: 40px
@@ -54,10 +57,12 @@
 
       .icon
         font-weight: bold
+
       .toggle-icon
         @include center-hor-ver
         height: 50px
         width: 50px
+
   .sub-dept
     color: black
     font-weight: bold
@@ -67,29 +72,32 @@
     @include center-hor
     margin-left: 20px
     color: $primary-color
+
   .content-body
     background-color: #f7f7f7
+    overflow-y: auto
+
     .content-wrap
-      border-top-right-radius: 50px
-      background-color: #6f4e37
-      padding-top: 10px
-      overflow-y: auto
+      border-top-right-radius: 40px
+      background-color: $secondary-color
+      margin-top: 10px
       height: 100vh
       .side-nav-item
-        display: flex
-        padding: 5px
-        .item-icon
-          min-width: 50px
-          height: 30px
-          @include center-hor-ver
-          margin-right: 10px
-          cursor: pointer
-          .icon
-            color: white
-
-        .item-label
+        padding: 0
+        .collapse-label
+          display: flex
+          padding: 5px
+          align-items: center
+          color: white
           font-weight: bold
-          @include center-hor-ver
+          cursor: pointer
+          .item-icon
+            min-width: 50px
+            height: 30px
+            @include center-hor-ver
+            margin-right: 10px
+          .item-label
+            @include center-hor-ver
 
 .top-bar
   position: fixed
@@ -105,6 +113,7 @@
   .left-side
     padding-left: 10px
     @include center-hor
+
     .toggle-icon
       color: black
       bottom: 40px
@@ -121,6 +130,7 @@
 
       .icon
         font-weight: bold
+
     .brand
       margin-left: 60px
       cursor: pointer
@@ -128,8 +138,10 @@
       font-weight: bold
       @include center-hor-ver
       color: black
+
       .logo
         @include center-hor-ver
+
       .name
         @include center-hor-ver
         margin-left: 10px
@@ -161,13 +173,16 @@
     position: fixed
     top: 0
     width: 100%
+
     .left-side
       .toggle-icon
         display: none
+
       .brand
         margin-left: 40px
         @include center-hor-ver
         color: black
+
         .name
           font-size: 20px
 

@@ -49,58 +49,74 @@
         </div>
       </div>
       <div class="content-body">
-      <div class="content-wrap">
-        <div class="side-nav-item">
-          <div class="item-icon">
-            <icon name="eye"></icon>
+        <div id="content-wrap" class="content-wrap">
+          <div class="side-nav-item active">
+            <div class="collapse-label">
+              <div class="item-icon">
+                  <i class="el-icon-odometer"></i>
+              </div>
+              <div class="item-label" v-if="toggle">
+                Dashboard
+              </div>
+            </div>
           </div>
-          <div class="item-label" v-if="toggle">
-            Farmer
+          <div class="side-nav-item">
+            <router-link to="/farmers">
+            <div class="collapse-label">
+              <div class="item-icon">
+                  <i class="el-icon-connection"></i>
+              </div>
+              <div class="item-label" v-if="toggle">
+                Farmer
+              </div>
+            </div></router-link>
           </div>
-        </div>
-        <div class="side-nav-item">
-          <div class="item-icon">
-            <icon name="activity"></icon>
+          <div class="side-nav-item">
+            <router-link to="/cooperatives">
+              <div class="collapse-label">
+                <div class="item-icon">
+                    <i class="el-icon-full-screen"></i>
+                </div>
+                <div class="item-label" v-if="toggle">
+                  Corporatives
+                </div>
+              </div>
+            </router-link>
           </div>
-          <div class="item-label" v-if="toggle">
-            Corporate
-          </div>
-        </div>
-        <div class="side-nav-item">
-          <div class="item-icon">
-            <icon name="users"></icon>
-          </div>
-          <div class="item-label" v-if="toggle">
+          <div class="side-nav-item">
             <div class="tab">
               <input type="checkbox" id="user">
-              <label class="tab-label" for="user">User Management</label>
+              <label class="tab-label" for="user">
+                <div class="collapse-label">
+                  <div class="item-icon">
+                      <i class="el-icon-user"></i>
+                  </div>
+                  <div class="item-label" v-if="toggle">
+                    User Management
+                  </div>
+                </div>
+              </label>
               <div class="tab-content">
                 <p>Roles</p>
                 <p>Permissions</p>
               </div>
             </div>
           </div>
-        </div>
-        <div class="side-nav-item">
-          <div class="item-icon">
-            <icon name="archive"></icon>
+          <div class="side-nav-item">
+            <div class="collapse-label">
+              <div class="item-icon">
+                  <i class="el-icon-date"></i>
+              </div>
+              <div class="item-label" v-if="toggle">
+                Booking
+              </div>
+            </div>
           </div>
-          <div class="item-label" v-if="toggle">
-           Booking
-          </div>
         </div>
-      </div>
-      </div>
-      <div class="collapse-btn">
-        <i @click="toggleNav('close')" v-if="toggle" class="el-icon-d-arrow-left"></i>
-        <i @click="toggleNav('open')" v-else class="el-icon-d-arrow-right"></i>
       </div>
     </div>
     <div class="content-slot" id="main">
       <div class="content-wrapper the-card">
-        <router-link to="/">Home</router-link>
-        |
-        <router-link to="/about">About</router-link>
         <router-view/>
       </div>
     </div>
@@ -119,6 +135,14 @@ export default {
     }
   },
   mounted () {
+    const items = document.getElementsByClassName('side-nav-item')
+    for (let i = 0; i < items.length; i++) {
+      items[i].addEventListener('click', function () {
+        const current = document.getElementsByClassName('active')
+        current[0].className = current[0].className.replace(' active', '')
+        this.className += ' active'
+      })
+    }
     this.screenWidth = window.screen.width
     if (this.screenWidth < 451) {
       this.showMenu = true
@@ -128,12 +152,12 @@ export default {
     toggleNav: function (action) {
       if (action === 'open') {
         if (this.screenWidth > 450) {
-          document.getElementById('main').style.marginLeft = '300px'
+          document.getElementById('main').style.marginLeft = '230px'
         } else {
           document.getElementById('main').style.marginLeft = '0px'
         }
         document.getElementById('mySidenav').style.transition = 'width 0.3s'
-        document.getElementById('mySidenav').style.width = '300px'
+        document.getElementById('mySidenav').style.width = '230px'
         this.toggle = true
       } else {
         if (this.screenWidth > 450) {
@@ -151,6 +175,11 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
+a:link {
+  text-decoration: none;
+}
+
 .icon {
   color: #2c3e50;
 }
