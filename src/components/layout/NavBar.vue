@@ -1,5 +1,6 @@
 <template>
   <div>
+    <a-back-top />
     <div class="top-bar">
       <div class="left-side">
         <div v-if="!toggle" class="brand">
@@ -13,12 +14,15 @@
       </div>
       <div class="right-side">
         <div class="notification">
-          <el-tooltip class="item" effect="dark" content="Notifications" placement="bottom-end">
+          <a-tooltip placement="bottomRight">
+            <template slot="title">
+              <span>Notifications</span>
+            </template>
             <icon name="bell"></icon>
-          </el-tooltip>
+          </a-tooltip>
         </div>
         <div class="active-user">
-          <el-avatar icon="el-icon-user-solid"></el-avatar>
+          <a-avatar icon="user" />
         </div>
       </div>
     </div>
@@ -53,7 +57,7 @@
           <div class="side-nav-item active">
             <div class="collapse-label">
               <div class="item-icon">
-                  <i class="el-icon-odometer"></i>
+                <i class="el-icon-odometer"></i>
               </div>
               <div class="item-label" v-if="toggle">
                 Dashboard
@@ -62,20 +66,21 @@
           </div>
           <div class="side-nav-item">
             <router-link to="/farmers">
-            <div class="collapse-label">
-              <div class="item-icon">
+              <div class="collapse-label">
+                <div class="item-icon">
                   <i class="el-icon-connection"></i>
+                </div>
+                <div class="item-label" v-if="toggle">
+                  Farmer
+                </div>
               </div>
-              <div class="item-label" v-if="toggle">
-                Farmer
-              </div>
-            </div></router-link>
+            </router-link>
           </div>
           <div class="side-nav-item">
             <router-link to="/cooperatives">
               <div class="collapse-label">
                 <div class="item-icon">
-                    <i class="el-icon-full-screen"></i>
+                  <i class="el-icon-full-screen"></i>
                 </div>
                 <div class="item-label" v-if="toggle">
                   Corporatives
@@ -89,7 +94,7 @@
               <label class="tab-label" for="user">
                 <div class="collapse-label">
                   <div class="item-icon">
-                      <i class="el-icon-user"></i>
+                    <i class="el-icon-user"></i>
                   </div>
                   <div class="item-label" v-if="toggle">
                     User Management
@@ -97,15 +102,18 @@
                 </div>
               </label>
               <div class="tab-content">
-                <p>Roles</p>
-                <p>Permissions</p>
+                <router-link to="/users"><p>Users</p></router-link>
+                <router-link to="/departments"><p>Departments</p></router-link>
+                <router-link to="/branches"><p>Branches</p></router-link>
+                <router-link to="/permissions"><p>Permissions</p></router-link>
+                <router-link to="/roles"><p>User Groups</p></router-link>
               </div>
             </div>
           </div>
           <div class="side-nav-item">
             <div class="collapse-label">
               <div class="item-icon">
-                  <i class="el-icon-date"></i>
+                <i class="el-icon-date"></i>
               </div>
               <div class="item-label" v-if="toggle">
                 Booking
@@ -124,9 +132,14 @@
 </template>
 
 <script>
-
+import { Tooltip, Avatar, BackTop } from 'ant-design-vue'
 export default {
   name: 'NavBar',
+  components: {
+    'a-tooltip': Tooltip,
+    'a-avatar': Avatar,
+    'a-back-top': BackTop
+  },
   data () {
     return {
       toggle: false,

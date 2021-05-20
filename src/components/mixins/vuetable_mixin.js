@@ -19,7 +19,7 @@ const vueTableMixin = {
   props: {
     itemsPerPageOptionsInit: {
       default: function () {
-        return [10, 25, 50, 100]
+        return [5, 10, 25, 50, 100]
       }
     }
   },

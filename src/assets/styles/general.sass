@@ -1,5 +1,8 @@
 @import "mixins"
 @import "variables"
+.ant-btn
+  color: white
+  border: none
 .tx-center
   text-align: center
 .pri-color
@@ -22,7 +25,7 @@
 .the-card
   @include shadow
 .search-input
-  border: 2px solid #e3e6eb
+  border: 1px solid #e3e6eb
   height: 30px
   border-radius: 8px
   outline: none
@@ -31,24 +34,103 @@
 .the-btn
   outline: none
   border: none
-  @include shadow
   border-radius: 8px
   height: 30px
   padding: 3px 6px
+  @include center-hor
 .pagination-footer
   justify-content: space-between
   padding: 0 10px
   @include center-hor
+  margin-bottom: 20px
 .pagination-btn
   background-color: $hover-color
   color: black
   @include center-hor-ver
-  height: 20px
+  height: 30px
+  width: 30px
+  border-radius: 50%
   font-weight: bold
   cursor: pointer
-
+.action-btns
+  margin-right: 5px
+.form-input
+  height: 35px
+  border-radius: 8px
+  border: none
+  outline: none
+  background-color: $hover-color
+  width: 100%
+  padding: 10px
+  margin-bottom: 10px
+.view-item-body
+  border-radius: 10px
+  border: 1px solid $hover-color
+  padding: 10px
+.navigation-top-bar
+  height: 50px
+  background-color: $secondary-color
+  padding: 10px
+  font-size: 30px
+  font-weight: bold
+  align-items: center
+  display: flex
+  justify-content: space-between
+  color: white
+  border-radius: 10px
+  margin-bottom: 20px
+  .icon-div
+    height: 40px
+    width: 40px
+    border: 1px solid white
+    border-radius: 50%
+    @include center-hor-ver
+    cursor: pointer
+    &:hover
+      background-color: white
+      .icon
+        color: #00c18b
+    .icon
+      @include center-hor-ver
+      font-size: 20px
+      font-weight: bolder
+  span
+    cursor: pointer
+    margin-right: 30px
+.first-dash
+  display: flex
+  justify-content: space-between
+  .mini-card
+    @include shadow
+    cursor: pointer
+    padding: 10px
+    width: 16%
+    border-radius: 10px
+    height: 100px
+    @include center-hor-ver
+.item-body
+  border-radius: 10px
+  margin: 5px
+  padding: 10px
+  width: 100%
+  border: 1px solid $hover-color
 @media only screen and (max-width: 450px)
+  .navigation-top-bar
+    height: 30px
+    font-size: 20px
+    .icon-div
+      height: 25px
+      width: 25px
+      .icon
+        font-size: 15px
+    span
+      margin-right: 20px
   .content-slot
     margin-left: 0
-
+  .first-dash
+    overflow-x: auto
+    padding: 10px 0
+    .mini-card
+      min-width: 300px
+      margin: 7px
 

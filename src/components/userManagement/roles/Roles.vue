@@ -1,63 +1,43 @@
 <template>
   <div>
     <!--add-->
-    <a-modal v-model="show_modal" centered title="Add Cooperative" on-ok="createDepartment">
-      <label for="name">Cooperative Name</label>
-      <input class="form-input" type="text" v-model="form.name" id="name">
-      <label for="location">Location</label>
-      <input class="form-input" type="text" v-model="form.location" id="location">
-      <label for="person_name">Contact Person Name</label>
-      <input class="form-input" type="text" v-model="form.contactPersonName" id="person_name">
-      <label for="person_phone">Contact Person Name</label>
-      <input class="form-input" type="text" v-model="form.contactPersonPhone" id="person_phone">
-      <label for="officer">Field Officer</label>
-      <input class="form-input" type="text" v-model="form.fieldOfficer" id="officer">
-      <label for="officer_phone">Field Officer Phone</label>
-      <input class="form-input" type="text" v-model="form.fieldOfficerPhone" id="officer_phone">
-      <label for="manager">Manager</label>
-      <input class="form-input" type="text" v-model="form.manager" id="manager">
+    <a-modal v-model="show_modal" centered title="Add Role" on-ok="createDepartment">
+      <label for="code">Role Code</label>
+      <input class="form-input" type="text" v-model="formEdit.code" id="code">
+      <label for="name">Role Name</label>
+      <input class="form-input" type="text" v-model="formEdit.name" id="name">
       <template slot="footer">
         <a-button key="back" @click="handleCancel('add')">
           Cancel
         </a-button>
         <a-button key="submit" type="primary" :loading="loading" @click="createCooperative">
-          Add Cooperative
+          Add Role
         </a-button>
       </template>
     </a-modal>
-<!--    add-->
+    <!--    add-->
     <!--edit-->
     <a-modal v-model="show_modal_edit"
-             title="Edit Cooperative"
-             okType="primary" ok-text="Edit Cooperative" cancel-text="close" @ok="editDepartment">
-      <label for="e-name">Cooperative Name</label>
+             title="Edit Role"
+             okType="primary" ok-text="Edit Role" cancel-text="close" @ok="editDepartment">
+      <label for="e-code">Role Code</label>
+      <input class="form-input" type="text" v-model="formEdit.code" id="e-code">
+      <label for="e-name">Role Name</label>
       <input class="form-input" type="text" v-model="formEdit.name" id="e-name">
-      <label for="e-location">Location</label>
-      <input class="form-input" type="text" v-model="formEdit.location" id="e-location">
-      <label for="e-person_name">Contact Person Name</label>
-      <input class="form-input" type="text" v-model="formEdit.contactPersonName" id="e-person_name">
-      <label for="e-person_phone">Contact Person Phone</label>
-      <input class="form-input" type="text" v-model="formEdit.contactPersonPhone" id="e-person_phone">
-      <label for="e-officer">Field Officer</label>
-      <input class="form-input" type="text" v-model="formEdit.fieldOfficer" id="e-officer">
-      <label for="e-officer_phone">Field Officer Phone</label>
-      <input class="form-input" type="text" v-model="formEdit.fieldOfficerPhone" id="e-officer_phone">
-      <label for="e-manager">Manager</label>
-      <input class="form-input" type="text" v-model="formEdit.manager" id="e-manager">
       <template slot="footer">
         <a-button key="back" @click="handleCancel('edit')">
           Cancel
         </a-button>
         <a-button key="submit" type="primary" :loading="edit_loading" @click="editDepartment">
-          Edit Cooperative
+          Edit Role
         </a-button>
       </template>
     </a-modal>
     <!--    edit-->
-    <h3 class="tx-center">Cooperatives</h3>
+    <h3 class="tx-center">Roles</h3>
     <div style="display: flex; justify-content: space-between; margin-bottom: 20px">
-      <button class="the-btn sec-color" @click="showModal">Add Cooperative</button>
-      <search-bar :search-label='"Search Cooperative ..."'></search-bar>
+      <button class="the-btn sec-color" @click="showModal"><a-icon type="plus" /> Add Role</button>
+      <search-bar :search-label='"Search Role ..."'></search-bar>
     </div>
     <div>
       <div>
@@ -102,21 +82,22 @@
 </template>
 
 <script>
-import vueTableMixin from '../mixins/vuetable_mixin'
-import { Modal, notification } from 'ant-design-vue'
-import router from '../../router'
+import vueTableMixin from '../../mixins/vuetable_mixin'
+import { Modal, Icon, notification } from 'ant-design-vue'
+import router from '../../../router'
 
 export default {
   mixins: [vueTableMixin],
-  name: 'Cooperative',
+  name: 'Role',
   components: {
-    'a-modal': Modal
+    'a-modal': Modal,
+    'a-icon': Icon
   },
   data () {
     return {
       fields: [
-        { name: 'name', sortField: 'name', title: 'Cooperative Name' },
-        { name: 'nickname', title: 'Cooperative Code' },
+        { name: 'id', sortField: 'id', title: 'Role Code' },
+        { name: 'name', sortField: 'name', title: 'Role Name' },
         { name: '__slot:action', title: 'Action' }
       ],
       loading: false,
@@ -136,7 +117,7 @@ export default {
   },
   methods: {
     viewDetails (id) {
-      router.push('/cooperatives/' + id)
+      router.push('/roles/' + id)
     },
     showEditModal (data) {
       this.formEdit.name = data.name
@@ -163,13 +144,13 @@ export default {
     },
     showDeleteConfirm (id) {
       this.$confirm({
-        title: 'Are you sure delete this Cooperative?',
+        title: 'Are you sure delete this Role?',
         okText: 'Yes',
         okType: 'danger',
         cancelText: 'No',
         onOk () {
           notification.success({
-            message: id + 'Cooperative deleted successfully'
+            message: id + 'Role deleted successfully'
           })
         },
         onCancel () {

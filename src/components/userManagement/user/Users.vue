@@ -1,8 +1,8 @@
 <template>
   <div>
     <!--add-->
-    <a-modal v-model="show_modal" centered title="Add Cooperative" on-ok="createDepartment">
-      <label for="name">Cooperative Name</label>
+    <a-modal v-model="show_modal" centered title="Add User" on-ok="createDepartment">
+      <label for="name">User Name</label>
       <input class="form-input" type="text" v-model="form.name" id="name">
       <label for="location">Location</label>
       <input class="form-input" type="text" v-model="form.location" id="location">
@@ -21,16 +21,16 @@
           Cancel
         </a-button>
         <a-button key="submit" type="primary" :loading="loading" @click="createCooperative">
-          Add Cooperative
+          Add User
         </a-button>
       </template>
     </a-modal>
-<!--    add-->
+    <!--    add-->
     <!--edit-->
     <a-modal v-model="show_modal_edit"
-             title="Edit Cooperative"
-             okType="primary" ok-text="Edit Cooperative" cancel-text="close" @ok="editDepartment">
-      <label for="e-name">Cooperative Name</label>
+             title="Edit User"
+             okType="primary" ok-text="Edit User" cancel-text="close" @ok="editDepartment">
+      <label for="e-name">User Name</label>
       <input class="form-input" type="text" v-model="formEdit.name" id="e-name">
       <label for="e-location">Location</label>
       <input class="form-input" type="text" v-model="formEdit.location" id="e-location">
@@ -49,15 +49,15 @@
           Cancel
         </a-button>
         <a-button key="submit" type="primary" :loading="edit_loading" @click="editDepartment">
-          Edit Cooperative
+          Edit User
         </a-button>
       </template>
     </a-modal>
     <!--    edit-->
-    <h3 class="tx-center">Cooperatives</h3>
+    <h3 class="tx-center">Users</h3>
     <div style="display: flex; justify-content: space-between; margin-bottom: 20px">
-      <button class="the-btn sec-color" @click="showModal">Add Cooperative</button>
-      <search-bar :search-label='"Search Cooperative ..."'></search-bar>
+      <button class="the-btn sec-color" @click="showModal"><a-icon type="plus" /> Add User</button>
+      <search-bar :search-label='"Search User ..."'></search-bar>
     </div>
     <div>
       <div>
@@ -102,21 +102,24 @@
 </template>
 
 <script>
-import vueTableMixin from '../mixins/vuetable_mixin'
-import { Modal, notification } from 'ant-design-vue'
-import router from '../../router'
+import vueTableMixin from '../../mixins/vuetable_mixin'
+import { Modal, Icon, notification } from 'ant-design-vue'
+import router from '../../../router'
 
 export default {
   mixins: [vueTableMixin],
-  name: 'Cooperative',
+  name: 'User',
   components: {
-    'a-modal': Modal
+    'a-modal': Modal,
+    'a-icon': Icon
   },
   data () {
     return {
       fields: [
-        { name: 'name', sortField: 'name', title: 'Cooperative Name' },
-        { name: 'nickname', title: 'Cooperative Code' },
+        { name: 'name', sortField: 'name' },
+        { name: 'email', title: 'Email' },
+        { name: 'nickname', title: 'Nickname' },
+        { name: 'salary', title: 'Amount' },
         { name: '__slot:action', title: 'Action' }
       ],
       loading: false,
@@ -136,7 +139,7 @@ export default {
   },
   methods: {
     viewDetails (id) {
-      router.push('/cooperatives/' + id)
+      router.push('/users/' + id)
     },
     showEditModal (data) {
       this.formEdit.name = data.name
@@ -163,13 +166,13 @@ export default {
     },
     showDeleteConfirm (id) {
       this.$confirm({
-        title: 'Are you sure delete this Cooperative?',
+        title: 'Are you sure delete this User?',
         okText: 'Yes',
         okType: 'danger',
         cancelText: 'No',
         onOk () {
           notification.success({
-            message: id + 'Cooperative deleted successfully'
+            message: id + 'User deleted successfully'
           })
         },
         onCancel () {
