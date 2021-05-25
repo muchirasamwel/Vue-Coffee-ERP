@@ -148,7 +148,7 @@ export default {
   margin-bottom: 10px
 .sub-title
   padding: 20px 0
-  color: #00c18b
+  color: #1fd242
   font-weight: bold
 .bold
   font-weight: bold

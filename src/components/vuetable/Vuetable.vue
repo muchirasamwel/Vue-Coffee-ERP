@@ -1289,16 +1289,23 @@ export default {
     [v-cloak] {
         display: none;
     }
-    .vuetable th.sortable:hover {
-        color: #2185d0;
+    .vuetable {
+      overflow-x: auto;
+    }
+    .vuetable thead {
+      background-color: black;
+      color: white;
+      border-radius: 20px;
+    }
+    .vuetable th:hover {
         cursor: pointer;
     }
     .vuetable-body-wrapper {
         position:relative;
-        overflow-y:auto;
+        overflow:auto;
     }
     .vuetable-head-wrapper {
-        overflow-x: hidden;
+        overflow-x: auto;
     }
     .vuetable-actions {
         width: 15%;

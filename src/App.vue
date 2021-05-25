@@ -1,12 +1,10 @@
 <template>
   <div id="app">
-    <NavBar/>
+    <router-view></router-view>
   </div>
 </template>
 <script>
-import NavBar from './components/layout/NavBar'
 export default {
-  components: { NavBar }
 }
 </script>
 
@@ -17,6 +15,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
 }
+
 .icon {
   width: 24px;
 }

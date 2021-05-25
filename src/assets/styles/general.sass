@@ -1,8 +1,6 @@
 @import "mixins"
 @import "variables"
-.ant-btn
-  color: white
-  border: none
+
 .tx-center
   text-align: center
 .pri-color
@@ -89,7 +87,7 @@
     &:hover
       background-color: white
       .icon
-        color: #00c18b
+        color: #1fd242
     .icon
       @include center-hor-ver
       font-size: 20px
@@ -114,6 +112,47 @@
   padding: 10px
   width: 100%
   border: 1px solid $hover-color
+.login
+  position: absolute
+  top: 50%
+  left: 50%
+  margin-right: -50%
+  transform: translate(-50%, -50%)
+  width: 60%
+  padding: 10px
+  .brand
+    display: none
+  .login-details
+    border-radius: 10px
+    display: flex
+    justify-content: space-between
+    border: 1px solid $secondary-color
+    .left-items
+      display: none
+      //@include center-hor-ver
+      background-color: $secondary-color
+      padding: 10px
+      border-top-left-radius: 10px
+      border-bottom-left-radius: 10px
+      width: 50%
+      height: inherit
+      .details
+        .desc
+          @include center-hor-ver
+          .text-dec
+            width: 70%
+        .logo
+          @include center-hor-ver
+          margin-bottom: 20px
+    .right-items
+      padding: 10px
+      width: 50%
+@media only screen and (min-width: 450px)
+  .login
+    .login-details
+      .left-items
+        @include center-hor-ver
+
 @media only screen and (max-width: 450px)
   .navigation-top-bar
     height: 30px
@@ -133,4 +172,13 @@
     .mini-card
       min-width: 300px
       margin: 7px
-
+  .login
+    .brand
+      @include center-hor-ver
+    width: 100%
+    .login-details
+      .left-items
+        display: none
+        //@include center-hor-ver
+      .right-items
+        width: 100%
