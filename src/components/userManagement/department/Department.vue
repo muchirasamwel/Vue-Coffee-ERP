@@ -71,6 +71,7 @@ import vueTableMixin from '../../mixins/vuetable_mixin'
 import bodyScroll from 'body-scroll-freezer'
 import { Modal, notification } from 'ant-design-vue'
 import router from '../../../router'
+import { API } from '../../../api'
 
 export default {
   mixins: [vueTableMixin],
@@ -80,6 +81,7 @@ export default {
   },
   data () {
     return {
+      departments: [],
       fields: [
         { name: 'name', sortField: 'name', title: 'Department Name' },
         { name: 'nickname', title: 'Department Code' },
@@ -98,8 +100,18 @@ export default {
   mounted () {
     this.itemsPerPage = 10
     bodyScroll.init()
+    this.getDepartments()
   },
   methods: {
+    getDepartments () {
+      API.get('api/usermanagement/v1/departments')
+        .then(response => {
+          this.departments = response.data
+        })
+        .catch(e => {
+          console.log(e)
+        })
+    },
     viewDetails (id) {
       router.push('/departments/' + id)
     },

@@ -23,9 +23,16 @@
             </a-tooltip>
           </div>
         </router-link>
-        <div class="active-user">
-          <a-avatar icon="user"/>
-        </div>
+        <a-popover title="Cetric Okola" placement="bottomRight" trigger="click">
+          <template slot="content">
+            <p>My profile</p>
+            <p>Settings</p>
+            <p>Logout</p>
+          </template>
+          <div class="active-user">
+            <a-avatar icon="user"/>
+          </div>
+        </a-popover>
       </div>
     </div>
     <div id="mySidenav" class="sidenav">
@@ -57,6 +64,7 @@
       <div class="content-body">
         <div id="content-wrap" class="content-wrap">
           <div class="side-nav-item active">
+            <router-link to="/dash">
             <div class="collapse-label">
               <div class="item-icon">
                 <a-icon type="dashboard"/>
@@ -65,6 +73,7 @@
                 Dashboard
               </div>
             </div>
+            </router-link>
           </div>
           <div class="side-nav-item">
             <router-link to="/farmers">
@@ -134,7 +143,7 @@
 </template>
 
 <script>
-import { Icon, Tooltip, Avatar, BackTop} from 'ant-design-vue'
+import {Popover, Icon, Tooltip, Avatar, BackTop} from 'ant-design-vue'
 
 export default {
   name: 'NavBar',
@@ -143,6 +152,7 @@ export default {
     'a-avatar': Avatar,
     'a-back-top': BackTop,
     'a-icon': Icon,
+    'a-popover': Popover
   },
   data() {
     return {
