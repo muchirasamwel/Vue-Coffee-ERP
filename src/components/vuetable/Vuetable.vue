@@ -1292,10 +1292,19 @@ export default {
     .vuetable {
       overflow-x: auto;
     }
-    .vuetable thead {
+    .vuetable thead th {
       background-color: black;
       color: white;
-      border-radius: 20px;
+      border:none;
+    }
+
+    .vuetable thead tr th:first-child {
+      border-bottom-left-radius: 10px;
+      border-top-left-radius: 10px;
+    }
+    .vuetable thead tr th:last-child {
+      border-bottom-right-radius: 10px;
+      border-top-right-radius: 10px;
     }
     .vuetable th:hover {
         cursor: pointer;
@@ -1339,5 +1348,9 @@ export default {
         padding: 0 !important;
         border-left: none  !important;
         border-right: none  !important;
+    }
+    .table td{
+      border-top: none;
+      border-bottom: 1px solid #dee2e6;
     }
 </style>

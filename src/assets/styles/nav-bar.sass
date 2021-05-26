@@ -3,11 +3,13 @@
 @mixin nav-shadow
   box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.1), 0 2px 10px 0 rgba(0, 0, 0, 0.19)
 
-.active , .side-nav-item:hover
+.active, .side-nav-item:hover
   background-color: $background-color
   border-top: 2px solid $hover-color
+
   .item-icon
     color: black
+
   .item-label
     color: black
 
@@ -21,18 +23,22 @@
   height: 100vh
 
   .side-top
-    background-color: #f7f7f7
+    background-color: $background-color
 
     .side-header
-      height: 50px
-      @include center-hor-ver
-      justify-content: space-between
       text-align: center
-      padding: 0 10px
+      padding: 10px
+
+      .close-icon-container
+        @include center-hor-ver
+        justify-content: end
 
       .brand-name
+        padding: 0px 10px 0px 0px
         @include center-hor-ver
         color: black
+        justify-content: space-between
+
 
         .logo
           @include center-hor-ver
@@ -40,7 +46,7 @@
         .name
           @include center-hor-ver
           margin-left: 10px
-          font-size: 20px
+          font-size: 16px
           font-weight: bold
           color: $secondary-color
 
@@ -64,26 +70,27 @@
         width: 50px
 
   .sub-dept
-    color: black
-    font-weight: bold
-    font-size: 16px
+    font-weight: bolder
+    font-size: 18px
     width: 100%
     height: 30px
     @include center-hor
     margin-left: 20px
-    color: $primary-color
+    color: $color-black
 
   .content-body
-    background-color: #f7f7f7
+    background-color: $secondary-color
     overflow-y: auto
+    border-top-right-radius: 40px
 
     .content-wrap
-      border-top-right-radius: 40px
       background-color: $secondary-color
       margin-top: 10px
       height: 100vh
+
       .side-nav-item
         padding: 0
+
         .collapse-label
           display: flex
           padding: 5px
@@ -91,27 +98,35 @@
           color: white
           font-weight: bold
           cursor: pointer
+
           .item-icon
             min-width: 50px
             height: 30px
             @include center-hor-ver
             margin-right: 10px
+
           .item-label
             @include center-hor-ver
 
 .top-bar
+  display: block !important
   position: fixed
   top: 0
-  justify-content: space-between
-  height: 50px
+  max-height: 80px
   width: 100%
-  background-color: #f7f7f7
+  padding: 20px 30px 20px 90px
+  background-color: $background-color
   z-index: 2
-  @include nav-shadow
+  //@include nav-shadow
   @include center-hor
+  hr
+    border-top: 1px solid black !important
+  &-content
+    display: flex
+    justify-content: space-between
+    width: 100%
 
   .left-side
-    padding-left: 10px
     @include center-hor
 
     .toggle-icon
@@ -150,7 +165,6 @@
         color: $secondary-color
 
   .right-side
-    padding-right: 10px
     @include center-hor
 
     .active-user

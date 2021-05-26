@@ -2,39 +2,9 @@
   <div>
     <a-back-top/>
     <div class="top-bar">
-      <div class="left-side">
-        <div v-if="!toggle" class="brand">
-          <div class="logo">
-            <img height="40" width="40" alt="Vue logo" src="../../assets/logo.png">
-          </div>
-          <div class="name">
-            Coffee - ERP
-          </div>
-        </div>
-      </div>
-      <div class="right-side">
-        <router-link to="/account/login">
-          <div class="notification">
-            <a-tooltip placement="bottomRight">
-              <template slot="title">
-                <span>Notifications</span>
-              </template>
-              <icon name="bell"></icon>
-            </a-tooltip>
-          </div>
-        </router-link>
-        <div class="active-user">
-          <a-avatar icon="user"/>
-        </div>
-      </div>
-    </div>
-    <div id="mySidenav" class="sidenav">
-      <div class="side-top">
-        <div class="side-header">
-          <div @click="toggleNav('open')" v-if="!toggle" class="toggle-icon">
-            <icon name="menu"/>
-          </div>
-          <div class="brand-name" v-if="toggle">
+      <div class="top-bar-content">
+        <div class="left-side">
+          <div v-if="!toggle" class="brand">
             <div class="logo">
               <img height="40" width="40" alt="Vue logo" src="../../assets/logo.png">
             </div>
@@ -42,8 +12,43 @@
               Coffee - ERP
             </div>
           </div>
-          <div class="close-btn" @click="toggleNav('close')" v-if="toggle">
-            <icon @click="toggleNav('close')" v-if="toggle" name="x"/>
+        </div>
+        <div class="right-side">
+          <router-link to="/account/login">
+            <div class="notification">
+              <a-tooltip placement="bottomRight">
+                <template slot="title">
+                  <span>Notifications</span>
+                </template>
+                <icon name="bell"></icon>
+              </a-tooltip>
+            </div>
+          </router-link>
+          <div class="active-user">
+            <a-avatar icon="user"/>
+          </div>
+        </div>
+      </div>
+      <hr>
+    </div>
+    <div id="mySidenav" class="sidenav">
+      <div class="side-top">
+        <div class="side-header">
+          <div @click="toggleNav('open')" v-if="!toggle" class="toggle-icon">
+            <icon name="menu"/>
+          </div>
+          <div class="close-icon-container">
+            <div class="close-btn" @click="toggleNav('close')" v-if="toggle">
+              <icon @click="toggleNav('close')" v-if="toggle" name="x"/>
+            </div>
+          </div>
+          <div class="brand-name" v-if="toggle">
+            <div class="logo">
+              <img width="75" alt="Vue logo" src="../../assets/logo.png">
+            </div>
+            <div class="name">
+              Coffee - ERP
+            </div>
           </div>
         </div>
         <div>
@@ -134,7 +139,7 @@
 </template>
 
 <script>
-import { Icon, Tooltip, Avatar, BackTop} from 'ant-design-vue'
+import { Icon, Tooltip, Avatar, BackTop } from 'ant-design-vue'
 
 export default {
   name: 'NavBar',
@@ -144,14 +149,14 @@ export default {
     'a-back-top': BackTop,
     'a-icon': Icon,
   },
-  data() {
+  data () {
     return {
       toggle: false,
       screenWidth: '',
       showMenu: false
     }
   },
-  mounted() {
+  mounted () {
     const items = document.getElementsByClassName('side-nav-item')
     for (let i = 0; i < items.length; i++) {
       items[i].addEventListener('click', function () {
