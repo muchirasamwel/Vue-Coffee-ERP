@@ -4,18 +4,18 @@
     <a @click="loadPage('prev')"
        style="margin-right: 20px"
       :class="['btn-nav', css.linkClass, isOnFirstPage ? css.disabledClass : '']">
-        <i v-if="icons.next != ''">
+        <i v-if="icons.next !== ''">
           <div class="pagination-btn" @click="prev()">
-            <i class="el-icon-back"></i>
+            &#8592;
           </div>
         </i>
         <span v-else></span>
     </a>
     <a @click="loadPage('next')"
       :class="['btn-nav', css.linkClass, isOnLastPage ? css.disabledClass : '']">
-      <i v-if="icons.next != ''">
+      <i v-if="icons.next !== ''">
           <div class="pagination-btn" @click="next()">
-            <i class="el-icon-right"></i>
+            &#8594;
           </div>
       </i>
       <span v-else></span>

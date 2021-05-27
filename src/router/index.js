@@ -16,9 +16,18 @@ const routes = [
   },
   {
     path: '/home',
+    redirect: '/dash'
+  },
+  {
+    path: '/home',
     name: 'Home',
     component: Main,
     children: [
+      {
+        path: '/dash',
+        name: 'dash',
+        component: () => import('../components/dash')
+      },
       {
         path: '/cooperatives',
         name: 'cooperatives',

@@ -11,7 +11,7 @@ export default {
           pageClass: 'item',
           linkClass: 'icon item',
           paginationClass: 'ui bottom attached segment grid',
-          paginationInfoClass: 'left floated left aligned six wide column',
+          paginationInfoClass: 'left floated left aligned six wide column'
         }
       }
     },
@@ -22,7 +22,7 @@ export default {
           first: 'angle double left icon',
           prev: 'fa fa-angle-left',
           next: 'fa fa-angle-right',
-          last: 'angle double right icon',
+          last: 'angle double right icon'
         }
       }
     },
@@ -31,12 +31,12 @@ export default {
       default () {
         return 2
       }
-    },
+    }
   },
-  data: function() {
-      return {
-        tablePagination: null
-      }
+  data: function () {
+    return {
+      tablePagination: null
+    }
   },
   computed: {
     totalPage () {
@@ -58,17 +58,17 @@ export default {
       return this.totalPage < (this.onEachSide * 2) + 4
     },
     windowSize () {
-      return this.onEachSide * 2 +1;
+      return this.onEachSide * 2 + 1
     },
     windowStart () {
       if (!this.tablePagination || this.tablePagination.current_page <= this.onEachSide) {
         return 1
       } else if (this.tablePagination.current_page >= (this.totalPage - this.onEachSide)) {
-        return this.totalPage - this.onEachSide*2
+        return this.totalPage - this.onEachSide * 2
       }
 
       return this.tablePagination.current_page - this.onEachSide
-    },
+    }
   },
   methods: {
     loadPage (page) {
@@ -79,7 +79,7 @@ export default {
     },
     setPaginationData (tablePagination) {
       this.tablePagination = tablePagination
-    },
+    }
   }
 }
 </script>
