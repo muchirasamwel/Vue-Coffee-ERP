@@ -24,9 +24,17 @@
               </a-tooltip>
             </div>
           </router-link>
-          <div class="active-user">
-            <a-avatar icon="user"/>
-          </div>
+<!--          replace with user(logged in user) details-->
+          <a-popover :title=loggedInUser placement="bottomRight" trigger="click">
+            <template slot="content">
+              <p>My Profile</p>
+              <p>Settings</p>
+              <p>Logout</p>
+            </template>
+            <div class="active-user">
+              <a-avatar icon="user"/>
+            </div>
+          </a-popover>
         </div>
       </div>
       <hr>
@@ -65,7 +73,7 @@
             <router-link to="/dash">
             <div class="collapse-label">
               <div class="item-icon">
-                <a-icon type="dashboard"/>
+                <img src="../../assets/icons/auctionsale.svg" alt="">
               </div>
               <div class="item-label" v-if="toggle">
                 Dashboard
@@ -77,7 +85,7 @@
             <router-link to="/farmers">
               <div class="collapse-label">
                 <div class="item-icon">
-                  <a-icon type="woman"/>
+                  <img src="../../assets/icons/farmers.svg" alt="">
                 </div>
                 <div class="item-label" v-if="toggle">
                   Farmer
@@ -89,7 +97,7 @@
             <router-link to="/cooperatives">
               <div class="collapse-label">
                 <div class="item-icon">
-                  <a-icon type="table"/>
+                  <img src="../../assets/icons/inventory.svg" alt="">
                 </div>
                 <div class="item-label" v-if="toggle">
                   Corporatives
@@ -103,7 +111,7 @@
               <label class="tab-label" for="user">
                 <div class="collapse-label">
                   <div class="item-icon">
-                    <a-icon type="team"/>
+                    <img src="../../assets/icons/usermanagement.svg" alt="">
                   </div>
                   <div class="item-label" v-if="toggle">
                     User Management
@@ -122,7 +130,7 @@
           <div class="side-nav-item">
             <div class="collapse-label">
               <div class="item-icon">
-                <a-icon type="calendar"/>
+                <img src="../../assets/icons/Booking.svg" alt="">
               </div>
               <div class="item-label" v-if="toggle">
                 Booking
@@ -141,7 +149,8 @@
 </template>
 
 <script>
-import { Popover, Icon, Tooltip, Avatar, BackTop } from 'ant-design-vue'
+import { Popover, Tooltip, Avatar, BackTop } from 'ant-design-vue'
+import {mapGetters} from "vuex/dist/vuex.mjs";
 
 export default {
   name: 'NavBar',
@@ -149,7 +158,6 @@ export default {
     'a-tooltip': Tooltip,
     'a-avatar': Avatar,
     'a-back-top': BackTop,
-    'a-icon': Icon,
     'a-popover': Popover
   },
   data () {
@@ -158,6 +166,11 @@ export default {
       screenWidth: '',
       showMenu: false
     }
+  },
+  computed: {
+    ...mapGetters([
+      'loggedInUser'
+    ]),
   },
   mounted () {
     const items = document.getElementsByClassName('side-nav-item')

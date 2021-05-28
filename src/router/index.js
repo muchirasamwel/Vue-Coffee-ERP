@@ -16,11 +16,7 @@ const routes = [
   },
   {
     path: '/home',
-    redirect: '/dash'
-  },
-  {
-    path: '/home',
-    name: 'Home',
+    name: 'home',
     component: Main,
     children: [
       {
@@ -51,7 +47,7 @@ const routes = [
       {
         path: '/branches',
         name: 'branches',
-        component: () => import('../components/userManagement/Branches')
+        component: () => import('../components/userManagement/branch/index')
       },
       {
         path: '/departments',

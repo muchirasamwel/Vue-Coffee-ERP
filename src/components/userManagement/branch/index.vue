@@ -2,43 +2,43 @@
   <div>
     <!--add-->
     <a-modal v-model="show_modal"
-             title="Add Department"
-             okType="primary" ok-text="Add Department" cancel-text="close" @ok="createDepartment">
+             title="Add Branch"
+             okType="primary" ok-text="Add Branch" cancel-text="close" @ok="createBranch">
       <div>
         <a-alert v-if="feedback !== ''" type="error" :message=feedback banner/>
       </div>
       <a-spin tip="Submitting..." :spinning="spinning">
         <div>
-          <label for="code">Department Code</label>
-          <input class="form-input" type="text" v-model="form.deptCode" id="code">
-          <span v-if="isCode" class="text-danger">Please provide department code</span>
+          <label for="code">Branch Code</label>
+          <input class="form-input" type="text" v-model="form.branchCode" id="code">
+          <span v-if="isCode" class="text-danger">Please provide branch code</span>
         </div>
         <div>
-          <label for="name">Department Name</label>
-          <input class="form-input" type="text" required v-model="form.deptName" id="name">
-          <span v-if="isName" class="text-danger">Please provide department name</span>
+          <label for="name">Branch Name</label>
+          <input class="form-input" type="text" required v-model="form.branchName" id="name">
+          <span v-if="isName" class="text-danger">Please provide branch name</span>
         </div>
       </a-spin>
     </a-modal>
     <!--edit-->
     <a-modal v-model="show_modal_edit"
-             title="Edit Department"
-             okType="primary" ok-text="Edit Department" cancel-text="close" @ok="editDepartment">
+             title="Edit Branch"
+             okType="primary" ok-text="Edit Branch" cancel-text="close" @ok="editBranch">
       <a-alert v-if="feedback_two !== ''" type="error" :message=feedback_two banner/>
       <a-spin tip="Submitting..." :spinning="spinning_e">
-        <label for="edit_code">Department Code</label>
-        <input class="form-input" type="text" v-model="formEdit.deptCode" id="edit_code">
-        <label for="name">Department Name</label>
-        <input class="form-input" type="text" v-model="formEdit.deptName" id="edit_name">
+        <label for="edit_code">Branch Code</label>
+        <input class="form-input" type="text" v-model="formEdit.branchCode" id="edit_code">
+        <label for="name">Branch Name</label>
+        <input class="form-input" type="text" v-model="formEdit.branchName" id="edit_name">
       </a-spin>
     </a-modal>
     <!--    edit-->
-    <h3 class="tx-center">Departments</h3>
+    <h3 class="tx-center">Branches</h3>
     <div style="display: flex; justify-content: space-between; margin-bottom: 20px">
-      <button class="the-btn sec-color" @click="showModal">Add Department</button>
+      <button class="the-btn sec-color" @click="showModal">Add Branch</button>
     </div>
     <div v-if="loading">
-      <a-spin tip="Fetching departments...">
+      <a-spin tip="Fetching branches...">
         <div class="spin-content">
         </div>
       </a-spin>
@@ -47,23 +47,23 @@
       <table class="the-table table">
         <thead class="thead-dark">
         <tr>
-          <th scope="col">Department Code</th>
-          <th scope="col">Department Name</th>
+          <th scope="col">Branch Code</th>
+          <th scope="col">Branch Name</th>
           <th scope="col">Actions</th>
         </tr>
         </thead>
-        <tbody v-for="item in departments">
+        <tbody v-for="item in branches">
         <tr>
-          <td>{{ item.deptCode }}</td>
-          <td>{{ item.deptName }}</td>
+          <td>{{ item.branchCode }}</td>
+          <td>{{ item.branchName }}</td>
           <td>
-            <a-button class="action-btns" shape="circle" @click="viewDetails(item.deptCode)"
+            <a-button class="action-btns" shape="circle" @click="viewDetails(item.branchCode)"
                       icon="eye"/>
             <a-button class="action-btns sec-color" type="success" shape="circle"
                       @click="showEditModal(item)"
                       icon="edit"/>
             <a-button class="action-btns" type="danger" shape="circle" icon="delete"
-                      @click="showDeleteConfirm(item.deptCode)"/>
+                      @click="showDeleteConfirm(item.branchCode)"/>
           </td>
         </tr>
         </tbody>
@@ -80,7 +80,7 @@ import {API} from '../../../api'
 
 export default {
   mixins: [vueTableMixin],
-  name: 'Department',
+  name: 'Branch',
   components: {
     'a-modal': Modal,
     'a-alert': Alert,
@@ -95,9 +95,9 @@ export default {
       feedback_two: '',
       isCode: false,
       isName: false,
-      departments: [],
+      branches: [],
       form: {
-        deptCode: '', deptName: ''
+        branchCode: '', branchName: ''
       },
       formEdit: {},
       visible: false,
@@ -106,13 +106,13 @@ export default {
     }
   },
   mounted() {
-    this.getDepartments()
+    this.getBranches()
   },
   methods: {
-    getDepartments() {
-      API.get('api/usermanagement/v1/departments')
+    getBranches() {
+      API.get('api/usermanagement/v1/branches')
         .then(response => {
-          this.departments = response.data
+          this.branches = response.data
           this.loading = false;
         })
         .catch(e => {
@@ -121,20 +121,20 @@ export default {
         })
     },
     viewDetails(id) {
-      router.push('/departments/' + id)
+      router.push('/branches/' + id)
     },
     showEditModal(item) {
       this.show_modal_edit = true
-      this.formEdit.deptName = item.deptName
-      this.formEdit.deptCode = item.deptCode
+      this.formEdit.branchName = item.branchName
+      this.formEdit.branchCode = item.branchCode
     },
     showModal() {
       this.show_modal = true
     },
-    createDepartment() {
+    createBranch() {
       this.feedback = '';
-      (this.form.deptCode === '') ? this.isCode = true : this.isCode = false;
-      (this.form.deptName === '') ? this.isName = true : this.isName = false;
+      (this.form.branchCode === '') ? this.isCode = true : this.isCode = false;
+      (this.form.branchName === '') ? this.isName = true : this.isName = false;
       if (!(this.isName || this.isCode)) {
         this.confirmCreateDepartment();
       }
@@ -142,14 +142,14 @@ export default {
     },
     confirmCreateDepartment() {
       this.spinning = true
-      API.post('api/usermanagement/v1/departments', this.form)
+      API.post('api/usermanagement/v1/branches', this.form)
         .then(response => {
           if (response.data.status === 0) {
             notification.success({
-              message: 'Department saved successfully.'
+              message: 'Branch saved successfully.'
             })
           }
-          this.departments.push(this.form)
+          this.branches.push(this.form)
           this.spinning = false
           this.show_modal = false
         })
@@ -158,13 +158,13 @@ export default {
           this.feedback = error.response.data.message
         })
     },
-    editDepartment() {
+    editBranch() {
       this.spinning_e = true
-      API.put(`api/usermanagement/v1/departments/${this.formEdit.deptCode}`, this.formEdit)
+      API.put(`api/usermanagement/v1/branches/${this.formEdit.branchCode}`, this.formEdit)
         .then(response => {
           if (response.data.status === 0) {
             notification.success({
-              message: 'Department edited successfully.'
+              message: 'Branch edited successfully.'
             })
             this.show_modal_edit = false
             this.spinning_e = false
@@ -183,13 +183,11 @@ export default {
         okType: 'danger',
         cancelText: 'No',
         onOk() {
-          API.delete(`api/usermanagement/v1/departments/${id}`)
+          API.delete(`api/usermanagement/v1/branches/${id}`)
             .then(res => {
-              if (res.status === 201) {
                 notification.success({
-                  message: 'Department deleted successfully'
+                  message: 'Branch deleted successfully'
                 })
-              }
             })
             .catch(error => {
               console.log(error.response)
