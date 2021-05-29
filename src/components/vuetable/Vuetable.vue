@@ -1350,6 +1350,7 @@ export default {
         border-right: none  !important;
     }
     .table td{
+      /*padding-bottom: 0px;*/
       border-top: none;
       border-bottom: 1px solid #dee2e6;
     }

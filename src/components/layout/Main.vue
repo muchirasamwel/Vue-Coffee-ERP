@@ -190,12 +190,12 @@ export default {
     toggleNav: function (action) {
       if (action === 'open') {
         if (this.screenWidth > 450) {
-          document.getElementById('main').style.marginLeft = '230px'
+          document.getElementById('main').style.marginLeft = '250px'
         } else {
           document.getElementById('main').style.marginLeft = '0px'
         }
         document.getElementById('mySidenav').style.transition = 'width 0.3s'
-        document.getElementById('mySidenav').style.width = '230px'
+        document.getElementById('mySidenav').style.width = '250px'
         this.toggle = true
       } else {
         if (this.screenWidth > 450) {

@@ -71,12 +71,15 @@
                   :per-page="itemsPerPage"
         >
           <template slot="action" slot-scope="props">
-            <a-button class="action-btns" shape="circle" @click="viewDetails(props.rowData.id)"
-                      icon="eye"/>
-            <a-button class="action-btns sec-color" type="success" shape="circle" @click="showEditModal(props.rowData)"
-                      icon="edit"/>
-            <a-button class="action-btns" type="danger" shape="circle" icon="delete"
-                      @click="showDeleteConfirm(props.rowData.id)"/>
+            <label class="action-btns" @click="viewDetails(props.rowData.id)">
+              <img src="../../assets/icons/view.svg" alt="" width="30px">
+            </label>
+            <label class="action-btns" @click="showEditModal(props.rowData)">
+              <img src="../../assets/icons/edit.svg" alt="" width="30px">
+            </label>
+            <label class="action-btns" @click="showDeleteConfirm(props.rowData.id)">
+              <img src="../../assets/icons/delete.svg" alt="" width="30px">
+            </label>
           </template>
         </vuetable>
       </div>
