@@ -106,6 +106,18 @@
             </router-link>
           </div>
           <div class="side-nav-item">
+            <router-link to="/booking">
+              <div class="collapse-label">
+                <div class="item-icon">
+                  <img src="../../assets/icons/Booking.svg" alt="">
+                </div>
+                <div class="item-label" v-if="toggle">
+                  Booking
+                </div>
+              </div>
+            </router-link>
+          </div>
+          <div class="side-nav-item">
             <div class="tab">
               <input type="checkbox" id="user">
               <label class="tab-label" for="user">
@@ -124,16 +136,6 @@
                 <router-link to="/branches"><p>Branches</p></router-link>
                 <router-link to="/permissions"><p>Permissions</p></router-link>
                 <router-link to="/roles"><p>User Groups</p></router-link>
-              </div>
-            </div>
-          </div>
-          <div class="side-nav-item">
-            <div class="collapse-label">
-              <div class="item-icon">
-                <img src="../../assets/icons/Booking.svg" alt="">
-              </div>
-              <div class="item-label" v-if="toggle">
-                Booking
               </div>
             </div>
           </div>

@@ -30,7 +30,7 @@
                 Permission Id
               </td>
               <td>
-                {{permission.permissionId}}
+                {{ permission.permissionId }}
               </td>
             </tr>
             <tr>
@@ -38,7 +38,7 @@
                 Permission Name
               </td>
               <td>
-                {{permission.permissionName}}
+                {{ permission.permissionName }}
               </td>
             </tr>
             </tbody>
@@ -76,8 +76,8 @@
 
 <script>
 
-import API from "../../../api";
-import {Alert, Spin} from "ant-design-vue";
+import API from '../../../api'
+import { Alert, Spin } from 'ant-design-vue'
 
 export default {
   name: 'permission_details',
@@ -85,19 +85,19 @@ export default {
     'a-alert': Alert,
     'a-spin': Spin
   },
-  data() {
+  data () {
     return {
       permission: '',
       loading: false,
       feedback: ''
     }
   },
-  mounted() {
-    const id = this.$route.params.id;
+  mounted () {
+    const id = this.$route.params.id
     this.getPermission(id)
   },
   methods: {
-    getPermission(id) {
+    getPermission (id) {
       this.loading = true
       API.get('api/usermanagement/v1/permissions', {
         params: {
@@ -105,8 +105,8 @@ export default {
         }
       })
         .then(response => {
-            this.permission = response.data
-            this.loading = false
+          this.permission = response.data
+          this.loading = false
         })
         .catch(err => {
           this.feedback = err.response.data

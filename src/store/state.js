@@ -1,4 +1,5 @@
 let state = {
-  loggedInUser: null
+  loggedInUser: null,
+  branches: []
 }
-export default state;
+export default state
