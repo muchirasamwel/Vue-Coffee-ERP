@@ -30,6 +30,11 @@ const routes = [
         component: () => import('../components/cooperatives/index')
       },
       {
+        path: '/booking',
+        name: 'booking',
+        component: () => import('../components/booking/index')
+      },
+      {
         path: '/cooperatives/:id',
         name: 'view Cooperative',
         component: () => import('../components/cooperatives/viewCooperative')
