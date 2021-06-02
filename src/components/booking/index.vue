@@ -52,7 +52,7 @@
           <label>No. of Bags</label>
           <input class="form-input" type="text" v-model="coffee.bags">
           <div class="row d-flex justify-content-end m-2">
-            <a-button type="primary" class="float-right" :loading="loading" @click="addCoffee" :small="true">
+            <a-button type="primary" class="float-right" :disabled="!canAddCoffee" @click="addCoffee" :small="true">
               Add Coffee
             </a-button>
           </div>
@@ -131,7 +131,8 @@
             </a-button>
           </div>
           <div class="my-3">
-            <custom-container :type="'coffee-container'" :units="'bags'" @delete="deleteCoffee"></custom-container>
+            <custom-container :initialItems="bookedCoffeeTypes" :type="'coffee-container'"
+                              :units="'bags'" @delete="deleteCoffee"></custom-container>
           </div>
 
         </div>
@@ -151,25 +152,35 @@
     <!--show-->
     <a-modal v-model="show_modal_view" centered title="More Booking Details">
       <div class="">
-        <div class="text-center">
-          <label>Booking Slip No: <span>{{ selectedBooking.bookingSlipNo }}</span></label>
+        <div class="">
+          <label>Booking Slip No: <span class="more-info-details">{{ selectedBooking.bookingSlipNo }}</span></label>
         </div>
         <div>
-          Receiving Branch Code: <span class="more-info-details">{{ selectedBooking.receivingBranchCode }}</span>
+          <label>Receiving Branch Code: <span class="more-info-details">{{ selectedBooking.receivingBranchCode }}</span>
+          </label>
         </div>
         <div>
-          Grower Category: <span class="more-info-details">{{ selectedBooking.growerCategory }}</span>
+          <label>
+            Grower Category: <span class="more-info-details">{{ selectedBooking.growerCategory }}</span>
+          </label>
         </div>
         <div>
-          Grower Code: <span class="more-info-details">{{ selectedBooking.growerCode }}</span>
+          <label>
+            Grower Code: <span class="more-info-details">{{ selectedBooking.growerCode }}</span>
+          </label>
         </div>
         <div>
-          Status: <span class="more-info-details">{{ selectedBooking.status }}</span>
+          <label>
+            Status: <span class="more-info-details"
+                          :class="{'status_approved':selectedBooking.status==='APPROVED','status_rejected':selectedBooking.status==='REJECTED'}">{{
+              selectedBooking.status
+            }}</span>
+          </label>
         </div>
         <br>
         <div>
           <label>Delivery Description</label>
-          <textarea cols="10" rows="10" class="form-input" v-model="selectedBooking.deliveryDescription" readonly>
+          <textarea cols="10" rows="5" class="form-input" v-model="selectedBooking.deliveryDescription" readonly>
             </textarea>
         </div>
         <div class="my-3">
@@ -185,8 +196,44 @@
         </a-button>
       </template>
     </a-modal>
-    <!--    edit-->
+    <!--    show-->
+    <!--approve-->
+    <a-modal v-model="approve_modal" centered title="Confirm Approval">
+      <div class="font-weight-bolder status_approved">Approve this booking?</div>
+      <div>
+        <label>Comment</label>
+        <textarea cols="10" rows="5" class="form-input" v-model="comment.approve">
+            </textarea>
+      </div>
+      <template slot="footer">
+        <a-button key="back" @click="handleCancel('approve')">
+          Cancel
+        </a-button>
+        <a-button key="submit" type="primary" @click="approveBooking" :disabled="!comment.approve">
+          Approve
+        </a-button>
+      </template>
+    </a-modal>
+    <!--    approve-->
 
+    <!--reject-->
+    <a-modal v-model="reject_modal" centered title="Confirm Reject">
+      <div class="font-weight-bolder status_rejected">Reject this booking?</div>
+      <div>
+        <label>Comment</label>
+        <textarea cols="10" rows="5" class="form-input" v-model="comment.reject">
+            </textarea>
+      </div>
+      <template slot="footer">
+        <a-button key="back" @click="handleCancel('reject')">
+          Cancel
+        </a-button>
+        <a-button key="submit" type="danger" @click="approveBooking(false)" :disabled="!comment.reject">
+          Reject
+        </a-button>
+      </template>
+    </a-modal>
+    <!--    reject-->
     <h3 class="tx-center">Booking</h3>
     <button class="the-btn sec-color" @click="showModal">Add Booking</button>
     <div class="d-flex justify-content-between my-3 filter-container">
@@ -236,20 +283,24 @@
         <vuetable ref="vuetable"
                   :api-mode="false"
                   :fields="fields"
-                  :data-manager="dataManager"
-                  pagination-path="paginationInfo"
-                  @vuetable:pagination-data="onPaginationData"
-                  :append-params="tableState"
                   :per-page="itemsPerPage"
-        >
+                  :data-manager="dataManager"
+                  pagination-path="pagination"
+                  @vuetable:pagination-data="onPaginationData">
+          <template slot="status" slot-scope="props">
+            <label
+              :class="{'status_approved':props.rowData.status=='APPROVED','status_rejected':props.rowData.status=='REJECTED'}">
+              {{ props.rowData.status }}
+            </label>
+          </template>
           <template slot="action" slot-scope="props">
             <label class="action-btns" @click="viewDetails(props.rowData)">
               <img src="../../assets/icons/view.svg" alt="" width="30px">
             </label>
-            <label class="action-btns" @click="approveBooking(props.rowData)">
+            <label class="action-btns" @click="showApprove(props.rowData,true)">
               <img src="../../assets/icons/ticked.svg" alt="" width="30px">
             </label>
-            <label class="action-btns" @click="rejectBooking(props.rowData.id)">
+            <label class="action-btns" @click="showApprove(props.rowData,false)">
               <img src="../../assets/icons/reject.svg" alt="" width="30px">
             </label>
           </template>
@@ -283,6 +334,9 @@ import router from '../../router'
 import customContainerMixin from '@/components/mixins/customContainerMixin'
 import { eventBus } from '@/events'
 import API from '../../api'
+import _ from 'lodash'
+import { mapGetters } from 'vuex'
+import moment from 'moment'
 
 export default {
   mixins: [vueTableMixin, customContainerMixin],
@@ -292,6 +346,10 @@ export default {
   },
   data () {
     return {
+      approve_modal: false,
+      reject_modal: false,
+      comment: {},
+      canAddCoffee: false,
       bookings: [],
       bookingFilter: {
         date_option: 'null',
@@ -301,31 +359,31 @@ export default {
       // selectedBookingFilter: [],
       fields: [
         {
-          name: 'address.zipcode',
+          name: 'bookingSlipNo',
           title: 'Booking Slip No.'
         },
         {
-          name: 'group_id',
+          name: 'growerCode',
           title: 'Grower Code'
         },
         {
-          name: 'age',
+          name: 'receivingBranchCode',
           title: 'Receiving Branch Code'
         },
         {
-          name: 'created_at',
+          name: 'earliestExpectedDate',
           title: 'Earliest Date'
         },
         {
-          name: 'updated_at',
-          title: 'Latest Date'
+          name: 'lastedtExpectedDate',
+          title: 'Lastest Date'
         },
         {
-          name: 'nickname',
+          name: 'deliveryMode',
           title: 'Delivery Mode'
         },
         {
-          name: 'gender',
+          name: '__slot:status',
           title: 'Status'
         },
         {
@@ -344,20 +402,6 @@ export default {
       tableState: {},
       promise: true,
       itemsPerPage: 0,
-      branches: [
-        {
-          branchCode: 'B005',
-          branchName: 'Kamuru'
-        },
-        {
-          branchCode: 'B002',
-          branchName: 'Kimandi'
-        },
-        {
-          branchCode: 'B001',
-          branchName: 'Syokimau'
-        }
-      ],
       coffeeTypes: [
         'P1',
         'P2',
@@ -367,23 +411,23 @@ export default {
       ],
       coffee: {},
       bookedCoffeeTypes: [],
-      selectedBooking: {
-        'bookingSlipNo': '002',
-        'growerCategory': 'Farmer',
-        'growerCode': '02032',
-        'earliestExpectedDate': '2021-06-03',
-        'lastestExpectedDate': '2021-06-04',
-        'deliveryMode': 'ROAD',
-        'deliveryDescription': 'SOme description here',
-        'receivingBranchCode': 'B005',
-        expectedQuantity: [{
-          'coffeeType': 'P1',
-          'noOfbags': '300'
-        }, {
-          'coffeeType': 'Mbuni',
-          'noOfbags': '300'
-        }]
-      }
+      selectedBooking: {}
+    }
+  },
+  computed: {
+    ...mapGetters({
+      branches: 'branches'
+    })
+  },
+  watch: {
+    coffee: {
+      handler: function () {
+        this.canAddCoffee = (this.coffee.hasOwnProperty('bags') && this.coffee.hasOwnProperty('type') &&
+          this.coffee.bags.match(/^[0-9]{1,7}$/g) &&
+          this.coffee.bags !== 0 &&
+          (this.coffee.type.length > 1))
+      },
+      deep: true
     }
   },
   mounted () {
@@ -392,10 +436,8 @@ export default {
   methods: {
     dataManager (sortOrder, pagination) {
       if (this.bookings.length < 1) return
-
       let local = this.bookings
 
-      // sortOrder can be empty, so we have to check for that as well
       if (sortOrder.length > 0) {
         local = _.orderBy(
           local,
@@ -406,11 +448,11 @@ export default {
 
       pagination = this.$refs.vuetable.makePagination(
         local.length,
-        this.perPage
+        this.itemsPerPage
       )
-      console.log('pagination:', pagination)
-      let from = pagination.from - 1
-      let to = from + this.perPage
+
+      const from = pagination.from - 1
+      const to = from + this.itemsPerPage
 
       return {
         pagination: pagination,
@@ -419,19 +461,24 @@ export default {
     },
     filterBooking (prefix = '') {
       const filters = this.bookingFilter
-      let pre = prefix != '/null' && typeof prefix != 'object' ? prefix : ''
+      let pre = prefix != '/null' && typeof prefix !== 'object' ? prefix : ''
       if (pre === '' && this.bookingFilter.booking_type != 'null') {
         pre = this.bookingFilter.booking_type
       }
 
       if (this.bookingFilter.date_option === 'as_at_date') {
+        this.bookingFilter.asAtDate = moment(this.bookingFilter.asAtDate).format('YYYY-MM-DD')
         this.bookingFilter.startDate = 'null'
         this.bookingFilter.endDate = 'null'
       } else {
         if (this.bookingFilter.date_option !== 'custom') {
+          this.bookingFilter.startDate = moment(this.bookingFilter.startDate).format('YYYY-MM-DD')
           this.bookingFilter.endDate = 'null'
+        } else {
+          this.bookingFilter.startDate = moment(this.bookingFilter.startDate).format('YYYY-MM-DD')
+          this.bookingFilter.endDate = moment(this.bookingFilter.endDate).format('YYYY-MM-DD')
+          this.bookingFilter.asAtDate = 'null'
         }
-        this.bookingFilter.asAtDate = 'null'
       }
       let query = 'api/booking/v1/book' + pre
       let i = 0
@@ -445,8 +492,9 @@ export default {
           i++
         }
       }
-      console.log(query)
-
+      if (i !== 0) {
+        this.getBookings(query)
+      }
     },
     deleteCoffee (id) {
       this.bookedCoffeeTypes = this.bookedCoffeeTypes.filter(coffee => coffee.id !== id)
@@ -457,45 +505,79 @@ export default {
       const data = {
         id: '',
         coffeeType: this.coffee.type,
-        noOfbags: this.coffee.bags
+        noOfbags: parseInt(this.coffee.bags)
       }
       this.bookedCoffeeTypes.push(data)
 
       this.updateSelect()
       this.loading = false
     },
-    updateSelect () {
-      this.bookedCoffeeTypes = this.createIds(this.bookedCoffeeTypes)
+    async updateSelect () {
+      this.bookedCoffeeTypes = await this.createIds(this.bookedCoffeeTypes)
       eventBus.$emit('updateSelectData', this.bookedCoffeeTypes)
     },
     viewDetails (booking) {
-      console.log(booking)
-      this.selectedBooking.expectedQuantity[0].noOfbags = booking.age
+      this.selectedBooking = Object.assign({}, booking)
       this.show_modal_view = true
     },
-    approveBooking (booking) {
-      // Approve
+    approveBooking (approved = true) {
+      let booking = this.selectedBooking
+      const saveData = {
+        bookingId: booking.bookingId,
+        approved: approved,
+        comment: approved ? this.comment.approve : this.comment.reject,
+        bookingSlipNo: booking.bookingSlipNo
+      }
+      this.approve_modal = false
+      API.post('api/booking/v1/coffee/book/approve', saveData)
+        .then(res => {
+          if (res.data.status === 0) {
+            notification.success({
+              message: 'Booking approved successfully'
+            })
+          } else {
+            notification.error({
+              message: 'Booking approval failed'
+            })
+          }
+        })
+        .catch(err => {
+          console.log('approve error', err)
+        })
     },
-    rejectBooking (booking) {
-      // Reject
+    showApprove (booking, approved = true) {
+      this.selectedBooking = booking
+      approved ? this.approve_modal = true : this.reject_modal = true
     },
-    showEditModal () {
+    async showEditModal () {
+      this.bookedCoffeeTypes = Object.assign([], this.selectedBooking.expectedQuantity)
+      this.bookedCoffeeTypes = await this.createIds(this.bookedCoffeeTypes)
       this.show_modal_edit = true
     },
     showModal () {
+      this.bookedCoffeeTypes = []
       this.show_modal = true
     },
     handleCancel (type) {
       if (type === 'edit') {
         this.show_modal_edit = false
+      } else if (type === 'approve') {
+        this.approve_modal = false
+      } else if (type === 'reject') {
+        this.reject_modal = false
       } else {
         this.show_modal = false
       }
     },
-    getBookings () {
-      API.get('api/booking/v1/coffee/book')
+    getBookings (query = null) {
+      let api = 'api/booking/v1/coffee/book'
+      if (query != null) {
+        api = query
+      }
+      API.get(api)
         .then(res => {
           this.bookings = res.data.content
+          this.$refs.vuetable.reload()
         })
         .catch(error => {
           console.log(error)
@@ -508,35 +590,66 @@ export default {
         return item
       }))
       const submitData = Object.assign({}, this.form)
+      submitData.earliestExpectedDate = moment(submitData.earliestExpectedDate).format('YYYY-MM-DD')
+      submitData.lastestExpectedDate = moment(submitData.lastestExpectedDate).format('YYYY-MM-DD')
       submitData.expectedQuantity = expectedQuantity
-      API.post('/api/booking/v1/coffee/book', this.form)
+      API.post('api/booking/v1/coffee/book', submitData)
         .then(response => {
           if (response.data.status === 0) {
             notification.success({
               message: 'Booking saved successfully.'
             })
+            this.show_modal = false
+          } else {
+            notification.error({
+              message: 'Booking update failed.'
+            })
           }
-
-          this.show_modal = false
+          this.loading = false
         })
         .catch(error => {
+          this.loading = false
           this.feedback = error.response.data.message
         })
-      this.show_modal = false
     },
     editBooking () {
       this.edit_loading = true
-      this.show_modal_edit = false
+      const expectedQuantity = Object.assign({}, this.bookedCoffeeTypes.map(function (item) {
+        delete item.id
+        return item
+      }))
+      const submitData = Object.assign({}, this.selectedBooking)
+      submitData.earliestExpectedDate = moment(submitData.earliestExpectedDate).format('YYYY-MM-DD')
+      submitData.lastestExpectedDate = moment(submitData.lastestExpectedDate).format('YYYY-MM-DD')
+      submitData.expectedQuantity = expectedQuantity
+      API.put('api/booking/v1/coffee/book', submitData)
+        .then(response => {
+          if (response.data.status === 0) {
+            notification.success({
+              message: 'Booking saved successfully.'
+            })
+            this.show_modal_edit = false
+          } else {
+            notification.error({
+              message: 'Booking update failed.'
+            })
+          }
+          this.edit_loading = false
+        })
+        .catch(error => {
+          this.edit_loading = false
+          this.feedback = error.response.data.message
+        })
     },
     showDeleteConfirm (id) {
       this.$confirm({
         title: 'Confirm Approval?',
         okText: 'Yes',
-        okType: 'danger',
+        okType: 'success',
         cancelText: 'No',
         onOk () {
           notification.success({
-            message: id + 'Cooperative deleted successfully'
+            message: id + 'Booking approved successfuly'
           })
         },
         onCancel () {
@@ -545,6 +658,10 @@ export default {
     }
   },
   created () {
+    if (this.branches.length === 0) {
+      this.$store.commit('FETCH_BRANCHES')
+    }
+
     this.getBookings()
   }
 }

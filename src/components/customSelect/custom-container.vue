@@ -33,7 +33,12 @@ export default {
   props: {
     type: { default: 'container' },
     units: { default: '' },
-    initialItems: { default: [] }
+    initialItems: {
+      type: Array,
+      default: function () {
+        return []
+      }
+    }
   },
   data () {
     return {

@@ -1,6 +1,6 @@
 export default {
   methods: {
-    createIds (data) {
+    async createIds (data) {
       let id = 0
 
       for (id; id < data.length; id++) {
