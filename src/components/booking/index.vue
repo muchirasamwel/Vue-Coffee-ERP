@@ -44,8 +44,8 @@
 
           <label>Coffee Type</label>
           <select v-model="coffee.type" class="form-input">
-            <option v-for="type in coffeeTypes" :value="type" :key="type">
-              {{ type }}
+            <option v-for="type in coffeeTypes" :value="type.coffeeType" :key="type.coffeeType">
+              {{ type.coffeeType }}
             </option>
           </select>
 
@@ -118,15 +118,15 @@
 
           <label>Coffee Type</label>
           <select v-model="coffee.type" class="form-input">
-            <option v-for="type in coffeeTypes" :value="type" :key="type">
-              {{ type }}
+            <option v-for="type in coffeeTypes" :value="type.coffeeType" :key="type.coffeeType">
+              {{ type.coffeeType }}
             </option>
           </select>
 
           <label>No. of Bags</label>
           <input class="form-input" type="text" v-model="coffee.bags">
           <div class="row d-flex justify-content-end m-2">
-            <a-button type="primary" class="float-right" :loading="loading" @click="addCoffee" :small="true">
+            <a-button type="primary" class="float-right" :disabled="!canAddCoffee" :loading="loading" @click="addCoffee" :small="true">
               Add Coffee
             </a-button>
           </div>
@@ -234,93 +234,110 @@
       </template>
     </a-modal>
     <!--    reject-->
-    <h3 class="tx-center">Booking</h3>
-    <button class="the-btn sec-color" @click="showModal">Add Booking</button>
-    <div class="d-flex justify-content-between my-3 filter-container">
-      <div>
-        <select v-model="bookingFilter.branchCode" class="form-input" @change="filterBooking">
-          <option value="null" selected>All Branches</option>
-          <option v-for="branch in branches" :value="branch.branchCode" :key="branch.branchCode">
-            {{ branch.branchName }}
-          </option>
-        </select>
-      </div>
-      <div>
-        <select v-model="bookingFilter.booking_type" class="form-input"
-                @change="filterBooking('/'+bookingFilter.booking_type)">
-          <option value="null" selected>All Bookings</option>
-          <option value="bigLotRegister">Big Lots</option>
-          <option value="smallLotRegister">Small Lots</option>
-        </select>
-      </div>
-      <div class="d-flex justify-content-between">
-        <select v-model="bookingFilter.date_option" class="form-input">
-          <option value="null" selected>No Date Filter</option>
-          <option value="weekly">Weekly</option>
-          <option value="as_at_date">As at specific date</option>
-          <option value="custom">Custom Range</option>
-        </select>
-      </div>
-      <div v-if="bookingFilter.date_option==='weekly'" class="d-flex justify-content-around">
-        <span>Weekly start date</span><input type="date" v-model="bookingFilter.startDate" class="form-input"
-                                             @change="filterBooking('/weekly')">
-      </div>
-      <div v-if="bookingFilter.date_option==='as_at_date'" class="d-flex justify-content-around">
-        <span>Date</span><input type="date" v-model="bookingFilter.asAtDate" class="form-input" @change="filterBooking">
-      </div>
-      <div v-if="bookingFilter.date_option==='custom'" class="d-flex justify-content-around">
-        <span>Start date</span><input type="date" v-model="bookingFilter.startDate" class="form-input"
-                                      @change="filterBooking">
-      </div>
-      <div v-if="bookingFilter.date_option==='custom'" class="d-flex justify-content-around">
-        <span>End date</span> <input type="date" v-model="bookingFilter.endDate" class="form-input"
-                                     @change="filterBooking">
-      </div>
-      <search-bar :search-label='"Search Booking ..."'></search-bar>
+    <h3 class="tx-center">{{ is_booking ? 'Booking' : 'Coffee Types' }}</h3>
+
+    <div class="d-flex justify-content-start">
+      <button class="the-btn sec-color px-3 mr-4" @click="showModal" v-if="is_booking">Add Booking</button>
+      <button class="the-btn pri-color px-3 text-white" @click="is_booking=!is_booking">
+        {{ is_booking ? 'Coffee Types' : 'Booking' }}
+      </button>
     </div>
-    <div>
-      <div>
-        <vuetable ref="vuetable"
-                  :api-mode="false"
-                  :fields="fields"
-                  :per-page="itemsPerPage"
-                  :data-manager="dataManager"
-                  pagination-path="pagination"
-                  @vuetable:pagination-data="onPaginationData">
-          <template slot="status" slot-scope="props">
-            <label
-              :class="{'status_approved':props.rowData.status=='APPROVED','status_rejected':props.rowData.status=='REJECTED'}">
-              {{ props.rowData.status }}
-            </label>
-          </template>
-          <template slot="action" slot-scope="props">
-            <label class="action-btns" @click="viewDetails(props.rowData)">
-              <img src="../../assets/icons/view.svg" alt="" width="30px">
-            </label>
-            <label class="action-btns" @click="showApprove(props.rowData,true)">
-              <img src="../../assets/icons/ticked.svg" alt="" width="30px">
-            </label>
-            <label class="action-btns" @click="showApprove(props.rowData,false)">
-              <img src="../../assets/icons/reject.svg" alt="" width="30px">
-            </label>
-          </template>
-        </vuetable>
-      </div>
-      <div class="pagination-footer">
+    <div v-show="!is_booking">
+      <coffee-types></coffee-types>
+    </div>
+
+    <div class="booking-process" v-show="is_booking">
+      <div class="justify-content-between my-3 filter-container">
         <div>
-          <vuetable-pagination-info ref="paginationInfo"></vuetable-pagination-info>
-        </div>
-        <div>
-          <span>Rows per page</span>
-          <select style="background-color: #e3e6eb;outline: none; cursor: pointer ;border: none; border-radius: 9px"
-                  v-model="itemsPerPage" @change="changePerPage">
-            <option v-for="(option) in itemsPerPageOptions" :key="option" v-bind:value="option">{{ option }}</option>
+          <select v-model="bookingFilter.branchCode" class="form-input" @change="filterBooking">
+            <option value="null" selected>All Branches</option>
+            <option v-for="branch in branches" :value="branch.branchCode" :key="branch.branchCode">
+              {{ branch.branchName }}
+            </option>
           </select>
         </div>
         <div>
-          <vuetable-pagination ref="pagination"
-                               @vuetable-pagination:change-page="onChangePage"
-          ></vuetable-pagination>
+          <select v-model="bookingFilter.booking_type" class="form-input"
+                  @change="filterBooking('/'+bookingFilter.booking_type)">
+            <option value="null" selected>All Bookings</option>
+            <option value="bigLotRegister">Big Lots</option>
+            <option value="smallLotRegister">Small Lots</option>
+          </select>
+        </div>
+        <div class="d-flex justify-content-between">
+          <select v-model="bookingFilter.date_option" class="form-input">
+            <option value="null" selected>No Date Filter</option>
+            <option value="weekly">Weekly</option>
+            <option value="as_at_date">As at specific date</option>
+            <option value="custom">Custom Range</option>
+          </select>
+        </div>
+        <div v-if="bookingFilter.date_option==='weekly'" class="d-flex justify-content-around">
+          <span>Weekly start date</span><input type="date" v-model="bookingFilter.startDate" class="form-input"
+                                               @change="filterBooking('/weekly')">
+        </div>
+        <div v-if="bookingFilter.date_option==='as_at_date'" class="d-flex justify-content-around">
+          <span>Date</span><input type="date" v-model="bookingFilter.asAtDate" class="form-input"
+                                  @change="filterBooking">
+        </div>
+        <div v-if="bookingFilter.date_option==='custom'" class="d-flex justify-content-around">
+          <span>Start date</span><input type="date" v-model="bookingFilter.startDate" class="form-input"
+                                        @change="filterBooking">
+        </div>
+        <div v-if="bookingFilter.date_option==='custom'" class="d-flex justify-content-around">
+          <span>End date</span> <input type="date" v-model="bookingFilter.endDate" class="form-input"
+                                       @change="filterBooking">
+        </div>
+        <search-bar :search-label='"Search Booking ..."'></search-bar>
+      </div>
+      <div>
+        <div>
+          <vuetable ref="vuetable"
+                    :api-mode="false"
+                    :fields="fields"
+                    :per-page="itemsPerPage"
+                    :data-manager="dataManager"
+                    pagination-path="pagination"
+                    @vuetable:pagination-data="onPaginationData">
+            <template slot="status" slot-scope="props">
+              <label
+                :class="{'status_approved':props.rowData.status=='APPROVED','status_rejected':props.rowData.status=='REJECTED'}">
+                {{ props.rowData.status }}
+              </label>
+            </template>
+            <template slot="action" slot-scope="props">
+              <a-button class="ant-btn ant-btn-sm mb-3" v-if="isSmallDevice" @click="showActions=!showActions">...
+              </a-button>
+              <div class="table-actions" v-if="!isSmallDevice || showActions">
+                <label class="action-btns" @click="viewDetails(props.rowData)">
+                  <img src="../../assets/icons/view.svg" alt="" width="30px">
+                </label>
+                <label class="action-btns" @click="showApprove(props.rowData,true)">
+                  <img src="../../assets/icons/ticked.svg" alt="" width="30px">
+                </label>
+                <label class="action-btns" @click="showApprove(props.rowData,false)">
+                  <img src="../../assets/icons/reject.svg" alt="" width="30px">
+                </label>
+              </div>
+            </template>
+          </vuetable>
+        </div>
+        <div class="pagination-footer">
+          <div>
+            <vuetable-pagination-info ref="paginationInfo"></vuetable-pagination-info>
+          </div>
+          <div>
+            <span>Rows per page</span>
+            <select style="background-color: #e3e6eb;outline: none; cursor: pointer ;border: none; border-radius: 9px"
+                    v-model="itemsPerPage" @change="changePerPage">
+              <option v-for="(option) in itemsPerPageOptions" :key="option" v-bind:value="option">{{ option }}</option>
+            </select>
+          </div>
+          <div>
+            <vuetable-pagination ref="pagination"
+                                 @vuetable-pagination:change-page="onChangePage"
+            ></vuetable-pagination>
+          </div>
         </div>
       </div>
     </div>
@@ -334,18 +351,22 @@ import router from '../../router'
 import customContainerMixin from '@/components/mixins/customContainerMixin'
 import { eventBus } from '@/events'
 import API from '../../api'
-import _ from 'lodash'
 import { mapGetters } from 'vuex'
 import moment from 'moment'
+import responsiveMixin from '@/components/mixins/responsiveMixin'
+import CoffeeTypes from '@/components/coffeeTypes'
 
 export default {
-  mixins: [vueTableMixin, customContainerMixin],
+  mixins: [vueTableMixin, customContainerMixin, responsiveMixin],
   name: 'Booking',
   components: {
+    CoffeeTypes,
     'a-modal': Modal
   },
   data () {
     return {
+      is_booking: true,
+      showActions: false,
       approve_modal: false,
       reject_modal: false,
       comment: {},
@@ -402,13 +423,6 @@ export default {
       tableState: {},
       promise: true,
       itemsPerPage: 0,
-      coffeeTypes: [
-        'P1',
-        'P2',
-        'P3',
-        'P.L',
-        'Mbuni'
-      ],
       coffee: {},
       bookedCoffeeTypes: [],
       selectedBooking: {}
@@ -416,7 +430,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      branches: 'branches'
+      branches: 'branches',
+      coffeeTypes: 'coffeeTypes'
     })
   },
   watch: {
@@ -661,6 +676,9 @@ export default {
     if (this.branches.length === 0) {
       this.$store.commit('FETCH_BRANCHES')
     }
+    if (this.coffeeTypes.length === 0) {
+      this.$store.commit('FETCH_COFFEE_TYPES')
+    }
 
     this.getBookings()
   }
@@ -669,6 +687,10 @@ export default {
 
 <style lang="sass">
 .filter-container
+  display: flex
+  @media only screen and (max-width: 450px)
+    display: block
+
   span
     margin: 0 10px
 </style>

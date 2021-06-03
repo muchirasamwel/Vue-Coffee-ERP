@@ -1,5 +1,6 @@
 let state = {
   loggedInUser: null,
-  branches: []
+  branches: [],
+  coffeeTypes: [],
 }
 export default state

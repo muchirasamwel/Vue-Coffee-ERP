@@ -55,9 +55,10 @@
 </template>
 
 <script>
-import {Icon, Alert, Input, notification} from 'ant-design-vue'
+import { Icon, Alert, Input, notification } from 'ant-design-vue'
 import API from '../../api'
-import router from "../../router";
+import router from '../../router'
+import axios from 'axios'
 
 export default {
   name: 'login',
@@ -68,47 +69,49 @@ export default {
     'a-alert': Alert
   },
 
-  data() {
+  data () {
     return {
       loading: false,
       feedback: '',
       form: {
-        username: '', password: ''
+        username: '',
+        password: ''
       },
       isEmail: false,
       isPassword: false
     }
   },
   methods: {
-    confirmLogin() {
+    confirmLogin () {
       this.feedback = '';
-      (this.form.password === '') ? this.isPassword = true : this.isPassword = false ;
-      (this.form.username === '') ? this.isEmail = true : this.isEmail = false;
+      (this.form.password === '') ? this.isPassword = true : this.isPassword = false;
+      (this.form.username === '') ? this.isEmail = true : this.isEmail = false
       if (!(this.isPassword || this.isEmail)) {
-        this.login();
+        this.login()
       }
     },
-    login() {
-      this.loading = true;
-      API.post('api/usermanagement/token', {
-        username: this.form.username, password: this.form.password
+    login () {
+      this.loading = true
+      axios.post(process.env.VUE_APP_BASE_URL + 'api/usermanagement/token', {
+        username: this.form.username,
+        password: this.form.password
       })
         .then(res => {
           this.isPassword = false
           this.isEmail = false
           if (res.data.status === 0) {
             this.$store.commit('SET_LOGGEDINUSER', res.data)
-            this.loading = false;
+            this.loading = false
             notification.success({
               message: 'Login successfully'
             })
-            router.push({name: 'dash'})
+            router.push({ name: 'dash' })
           }
         })
         .catch(error => {
           this.isPassword = false
           this.isEmail = false
-          this.loading = false;
+          this.loading = false
           if (error.response.status === 403) {
             this.feedback = error.response.data.message
           } else {

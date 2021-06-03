@@ -2,6 +2,7 @@ import Vuetable from '../vuetable/Vuetable.vue'
 import VuetablePagination from '../vuetable/VuetablePagination.vue'
 import VuetablePaginationInfo from '../vuetable/VuetablePaginationInfo.vue'
 import Vue from 'vue'
+import _ from 'lodash'
 
 const vueTableMixin = {
   components: {

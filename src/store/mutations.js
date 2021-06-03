@@ -5,16 +5,21 @@ let mutations = {
   SET_LOGGEDINUSER (state, user) {
     return state.loggedInUser = user
   },
-  SET_BRANCHES (state, branches) {
-    return state.branches = branches
-  },
   FETCH_BRANCHES (state) {
-    console.log('called')
     API.get('api/usermanagement/v1/branches')
       .then(res => {
         state.branches = res.data
       }).catch(err => {
-      console.log('fetch error', err)
+      console.log('fetch branches error', err)
+    })
+  },
+
+  FETCH_COFFEE_TYPES (state) {
+    API.get('api/booking/v1/coffeeTypes')
+      .then(res => {
+        state.coffeeTypes = res.data
+      }).catch(err => {
+      console.log('fetch coffee type error', err)
     })
   },
 }
