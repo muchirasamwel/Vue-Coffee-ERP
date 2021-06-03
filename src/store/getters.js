@@ -8,5 +8,8 @@ let getters = {
   branches: state => {
     return state.branches
   },
+  coffeeTypes: state => {
+    return state.coffeeTypes
+  },
 }
 export default getters
