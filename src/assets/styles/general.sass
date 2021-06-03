@@ -18,7 +18,7 @@
   transition: all 0.3s ease
   margin-top: 70px
   margin-left: 55px
-  padding: 20px 30px
+  padding: 20px 10px
 
   .content-wrapper
     overflow: auto
@@ -185,7 +185,23 @@
     .right-items
       padding: 10px
       width: 50%
-
+.user-management-page
+  display: flex
+  justify-content: space-between
+  a
+    text-decoration: none
+    color: black
+  a:hover
+    text-decoration: none
+  .item
+    width: 24.5%
+    height: 100px
+    border-radius: 10px
+    @include shadow
+    @include center-hor-ver
+    font-weight: bold
+    font-size: 20px
+    margin-bottom: 10px
 @media only screen and (min-width: 450px)
   .login
     .login-details
@@ -193,6 +209,12 @@
         @include center-hor-ver
 
 @media only screen and (max-width: 450px)
+  .user-management-page
+    display: block
+    .item
+      width: 100%
+      height: 100px
+      font-size: 15px
   .navigation-top-bar
     height: 30px
     font-size: 20px

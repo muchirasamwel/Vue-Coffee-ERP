@@ -347,7 +347,6 @@
 <script>
 import vueTableMixin from '../mixins/vuetable_mixin'
 import { Modal, notification } from 'ant-design-vue'
-import router from '../../router'
 import customContainerMixin from '@/components/mixins/customContainerMixin'
 import { eventBus } from '@/events'
 import API from '../../api'
@@ -476,8 +475,8 @@ export default {
     },
     filterBooking (prefix = '') {
       const filters = this.bookingFilter
-      let pre = prefix != '/null' && typeof prefix !== 'object' ? prefix : ''
-      if (pre === '' && this.bookingFilter.booking_type != 'null') {
+      let pre = prefix !== '/null' && typeof prefix !== 'object' ? prefix : ''
+      if (pre === '' && this.bookingFilter.booking_type !== 'null') {
         pre = this.bookingFilter.booking_type
       }
 
@@ -498,7 +497,7 @@ export default {
       let query = 'api/booking/v1/book' + pre
       let i = 0
       for (const property in filters) {
-        if (filters[property] != 'null' && property !== 'date_option' && property !== 'booking_type') {
+        if (filters[property] !== 'null' && property !== 'date_option' && property !== 'booking_type') {
           if (i === 0) {
             query += '?' + property + '=' + filters[property]
           } else {

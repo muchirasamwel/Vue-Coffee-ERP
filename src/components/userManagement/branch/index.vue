@@ -33,6 +33,16 @@
       </a-spin>
     </a-modal>
     <!--    edit-->
+    <!--    show dept details-->
+    <a-modal v-model="show_modal_more" centered title="Branch Details">
+      <p>Branch Code: <strong>{{ this.branchDetails.branchCode }}</strong></p>
+      <p>Branch Name: <strong>{{ this.branchDetails.branchName }}</strong></p>
+      <template slot="footer">
+        <a-button key="submit" type="primary" @click="show_modal_more = false">
+          Close
+        </a-button>
+      </template>
+    </a-modal>
     <h3 class="tx-center">Branches</h3>
     <div style="display: flex; justify-content: space-between; margin-bottom: 20px">
       <button class="the-btn sec-color" @click="showModal">Add Branch</button>
@@ -44,42 +54,60 @@
       </a-spin>
     </div>
     <div v-else>
-      <table class="the-table table">
-        <thead class="thead-dark">
-        <tr>
-          <th scope="col">Branch Code</th>
-          <th scope="col">Branch Name</th>
-          <th scope="col">Actions</th>
-        </tr>
-        </thead>
-        <tbody v-for="item in branches">
-        <tr>
-          <td>{{ item.branchCode }}</td>
-          <td>{{ item.branchName }}</td>
-          <td>
-            <a-button class="action-btns" shape="circle" @click="viewDetails(item.branchCode)"
-                      icon="eye"/>
-            <a-button class="action-btns sec-color" type="success" shape="circle"
-                      @click="showEditModal(item)"
-                      icon="edit"/>
-            <a-button class="action-btns" type="danger" shape="circle" icon="delete"
-                      @click="showDeleteConfirm(item.branchCode)"/>
-          </td>
-        </tr>
-        </tbody>
-      </table>
+      <div>
+        <vuetable ref="vuetable"
+                  :api-mode="false"
+                  :fields="fields"
+                  :per-page="itemsPerPage"
+                  :data-manager="dataManager"
+                  pagination-path="pagination"
+                  @vuetable:pagination-data="onPaginationData">
+          <template slot="action" slot-scope="props">
+            <a-button class="ant-btn ant-btn-sm mb-3" v-if="isSmallDevice" @click="showActions=!showActions">...
+            </a-button>
+            <div class="table-actions" v-if="!isSmallDevice || showActions">
+              <label class="action-btns" @click="viewDetails(props.rowData)">
+                <img src="../../../assets/icons/view.svg" alt="" width="30px">
+              </label>
+              <label class="action-btns" @click="showEditModal(props.rowData)">
+                <img src="../../../assets/icons/edit.svg" alt="" width="30px">
+              </label>
+              <label class="action-btns" @click="showDeleteConfirm(props.rowData)">
+                <img src="../../../assets/icons/delete.svg" alt="" width="30px">
+              </label>
+            </div>
+          </template>
+        </vuetable>
+      </div>
+      <div class="pagination-footer">
+        <div>
+          <vuetable-pagination-info ref="paginationInfo"></vuetable-pagination-info>
+        </div>
+        <div>
+          <span>Rows per page</span>
+          <select style="background-color: #e3e6eb;outline: none; cursor: pointer ;border: none; border-radius: 9px"
+                  v-model="itemsPerPage" @change="changePerPage">
+            <option v-for="(option) in itemsPerPageOptions" :key="option" v-bind:value="option">{{ option }}</option>
+          </select>
+        </div>
+        <div>
+          <vuetable-pagination ref="pagination"
+                               @vuetable-pagination:change-page="onChangePage"
+          ></vuetable-pagination>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import responsiveMixin from '@/components/mixins/responsiveMixin'
 import vueTableMixin from '../../mixins/vuetable_mixin'
 import {Alert, Modal, Spin, notification} from 'ant-design-vue'
-import router from '../../../router'
 import {API} from '../../../api'
 
 export default {
-  mixins: [vueTableMixin],
+  mixins: [vueTableMixin, responsiveMixin],
   name: 'Branch',
   components: {
     'a-modal': Modal,
@@ -93,22 +121,69 @@ export default {
       spinning_e: false,
       feedback: '',
       feedback_two: '',
+      showActions: false,
       isCode: false,
       isName: false,
       branches: [],
+      branchDetails: {
+        branchCode: '', branchName: ''
+      },
       form: {
         branchCode: '', branchName: ''
       },
+      fields: [
+        {
+          name: 'branchCode',
+          title: 'Branch Code'
+        },
+        {
+          name: 'branchName',
+          title: 'Branch Name'
+        },
+        {
+          name: '__slot:action',
+          title: 'Action'
+        }
+      ],
       formEdit: {},
       visible: false,
       show_modal_edit: false,
       show_modal: false,
+      show_modal_more: false,
     }
   },
   mounted() {
+    this.itemsPerPage = 5
+  },
+  created() {
     this.getBranches()
   },
   methods: {
+    dataManager(sortOrder, pagination) {
+      if (this.branches.length < 1) return
+      let local = this.branches
+
+      if (sortOrder.length > 0) {
+        local = _.orderBy(
+          local,
+          sortOrder[0].sortField,
+          sortOrder[0].direction
+        )
+      }
+
+      pagination = this.$refs.vuetable.makePagination(
+        local.length,
+        this.itemsPerPage
+      )
+
+      const from = pagination.from - 1
+      const to = from + this.itemsPerPage
+
+      return {
+        pagination: pagination,
+        data: _.slice(local, from, to)
+      }
+    },
     getBranches() {
       API.get('api/usermanagement/v1/branches')
         .then(response => {
@@ -117,11 +192,12 @@ export default {
         })
         .catch(e => {
           this.loading = false;
-          console.log(e)
         })
     },
-    viewDetails(id) {
-      router.push('/branches/' + id)
+    viewDetails(data) {
+      this.branchDetails.branchName = data.branchName;
+      this.branchDetails.branchCode= data.branchCode;
+      this.show_modal_more = true;
     },
     showEditModal(item) {
       this.show_modal_edit = true
@@ -137,6 +213,7 @@ export default {
       (this.form.branchName === '') ? this.isName = true : this.isName = false;
       if (!(this.isName || this.isCode)) {
         this.confirmCreateDepartment();
+        this.getBranches()
       }
 
     },
@@ -168,10 +245,10 @@ export default {
             })
             this.show_modal_edit = false
             this.spinning_e = false
+            this.getBranches()
           }
         })
         .catch(error => {
-          console.log(error.response)
           this.spinning_e = false
           this.feedback_two = error.response.data.message
         })
@@ -183,7 +260,7 @@ export default {
         okType: 'danger',
         cancelText: 'No',
         onOk() {
-          API.delete(`api/usermanagement/v1/branches/${id}`)
+          API.delete(`api/usermanagement/v1/branches/${id.branchCode}`)
             .then(res => {
                 notification.success({
                   message: 'Branch deleted successfully'
@@ -206,20 +283,6 @@ export default {
 </script>
 
 <style scoped>
-.the-table thead tr th {
-  border: none;
-}
-
-.the-table thead tr th:first-child {
-  border-bottom-left-radius: 10px;
-  border-top-left-radius: 10px;
-}
-
-.the-table thead tr th:last-child {
-  border-bottom-right-radius: 10px;
-  border-top-right-radius: 10px;
-}
-
 .spin-content {
   border: 1px solid #91d5ff;
   background-color: #e6f7ff;

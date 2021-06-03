@@ -24,7 +24,7 @@
               </a-tooltip>
             </div>
           </router-link>
-<!--          replace with user(logged in user) details-->
+          <!--          replace with user(logged in user) details-->
           <a-popover :title=loggedInUser placement="bottomRight" trigger="click">
             <template slot="content">
               <p>My Profile</p>
@@ -71,14 +71,14 @@
         <div id="content-wrap" class="content-wrap">
           <div class="side-nav-item active">
             <router-link to="/dash">
-            <div class="collapse-label">
-              <div class="item-icon">
-                <img src="../../assets/icons/auctionsale.svg" alt="">
+              <div class="collapse-label">
+                <div class="item-icon">
+                  <img src="../../assets/icons/auctionsale.svg" alt="">
+                </div>
+                <div class="item-label" v-if="toggle">
+                  Dashboard
+                </div>
               </div>
-              <div class="item-label" v-if="toggle">
-                Dashboard
-              </div>
-            </div>
             </router-link>
           </div>
           <div class="side-nav-item">
@@ -118,26 +118,16 @@
             </router-link>
           </div>
           <div class="side-nav-item">
-            <div class="tab">
-              <input type="checkbox" id="user">
-              <label class="tab-label" for="user">
-                <div class="collapse-label">
-                  <div class="item-icon">
-                    <img src="../../assets/icons/usermanagement.svg" alt="">
-                  </div>
-                  <div class="item-label" v-if="toggle">
-                    User Management
-                  </div>
+            <router-link to="/user-management">
+              <div class="collapse-label">
+                <div class="item-icon">
+                  <img src="../../assets/icons/usermanagement.svg" alt="">
                 </div>
-              </label>
-              <div class="tab-content">
-                <router-link to="/users"><p>Users</p></router-link>
-                <router-link to="/departments"><p>Departments</p></router-link>
-                <router-link to="/branches"><p>Branches</p></router-link>
-                <router-link to="/permissions"><p>Permissions</p></router-link>
-                <router-link to="/roles"><p>User Groups</p></router-link>
+                <div class="item-label" v-if="toggle">
+                  User Management
+                </div>
               </div>
-            </div>
+            </router-link>
           </div>
         </div>
       </div>
@@ -151,7 +141,7 @@
 </template>
 
 <script>
-import { Popover, Tooltip, Avatar, BackTop } from 'ant-design-vue'
+import {Popover, Tooltip, Avatar, BackTop} from 'ant-design-vue'
 import {mapGetters} from "vuex/dist/vuex.mjs";
 
 export default {
@@ -162,7 +152,7 @@ export default {
     'a-back-top': BackTop,
     'a-popover': Popover
   },
-  data () {
+  data() {
     return {
       toggle: false,
       screenWidth: '',
@@ -174,7 +164,7 @@ export default {
       'loggedInUser'
     ]),
   },
-  mounted () {
+  mounted() {
     const items = document.getElementsByClassName('side-nav-item')
     for (let i = 0; i < items.length; i++) {
       items[i].addEventListener('click', function () {

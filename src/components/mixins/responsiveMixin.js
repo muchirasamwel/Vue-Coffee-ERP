@@ -8,7 +8,6 @@ export default {
 
   watch: {
     windowWidth (newWidth, oldWidth) {
-      console.log(newWidth)
       this.toggleDevice()
     }
   },

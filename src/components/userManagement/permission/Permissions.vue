@@ -37,42 +37,61 @@
       </a-spin>
     </div>
     <div v-else>
-      <table class="the-table table">
-        <thead class="thead-dark">
-        <tr>
-          <th scope="col">Permission ID</th>
-          <th scope="col">Permission Name</th>
-          <th scope="col">Actions</th>
-        </tr>
-        </thead>
-        <tbody v-for="item in permissions">
-        <tr>
-          <td>{{ item.permissionId }}</td>
-          <td>{{ item.permissionName }}</td>
-          <td>
-            <a-button class="action-btns" shape="circle" @click="viewDetails(item.permissionId)"
-                      icon="eye"/>
-            <a-button class="action-btns sec-color" type="success" shape="circle"
-                      @click="showEditModal(item)"
-                      icon="edit"/>
-            <a-button class="action-btns" type="danger" shape="circle" icon="delete"
-                      @click="showDeleteConfirm(item.permissionId)"/>
-          </td>
-        </tr>
-        </tbody>
-      </table>
+      <div>
+        <vuetable ref="vuetable"
+                  :api-mode="false"
+                  :fields="fields"
+                  :per-page="itemsPerPage"
+                  :data-manager="dataManager"
+                  pagination-path="pagination"
+                  @vuetable:pagination-data="onPaginationData">
+          <template slot="action" slot-scope="props">
+            <a-button class="ant-btn ant-btn-sm mb-3" v-if="isSmallDevice" @click="showActions=!showActions">...
+            </a-button>
+            <div class="table-actions" v-if="!isSmallDevice || showActions">
+              <label class="action-btns" @click="viewDetails(props.rowData)">
+                <img src="../../../assets/icons/view.svg" alt="" width="30px">
+              </label>
+              <label class="action-btns" @click="showEditModal(props.rowData)">
+                <img src="../../../assets/icons/edit.svg" alt="" width="30px">
+              </label>
+<!--              <label class="action-btns" @click="showDeleteConfirm(props.rowData)">-->
+<!--                <img src="../../../assets/icons/delete.svg" alt="" width="30px">-->
+<!--              </label>-->
+            </div>
+          </template>
+        </vuetable>
+      </div>
+      <div class="pagination-footer">
+        <div>
+          <vuetable-pagination-info ref="paginationInfo"></vuetable-pagination-info>
+        </div>
+        <div>
+          <span>Rows per page</span>
+          <select style="background-color: #e3e6eb;outline: none; cursor: pointer ;border: none; border-radius: 9px"
+                  v-model="itemsPerPage" @change="changePerPage">
+            <option v-for="(option) in itemsPerPageOptions" :key="option" v-bind:value="option">{{ option }}</option>
+          </select>
+        </div>
+        <div>
+          <vuetable-pagination ref="pagination"
+                               @vuetable-pagination:change-page="onChangePage"
+          ></vuetable-pagination>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import vueTableMixin from '../../mixins/vuetable_mixin'
+import responsiveMixin from '@/components/mixins/responsiveMixin'
 import {Alert, Modal, Spin, notification} from 'ant-design-vue'
 import router from '../../../router'
 import {API} from '../../../api'
 
 export default {
-  mixins: [vueTableMixin],
+  mixins: [vueTableMixin, responsiveMixin],
   name: 'Permission',
   components: {
     'a-modal': Modal,
@@ -88,6 +107,7 @@ export default {
       feedback_two: '',
       isName: false,
       permissions: [],
+      showActions: false,
       form: {
         permissionName: ''
       },
@@ -95,12 +115,55 @@ export default {
       visible: false,
       show_modal_edit: false,
       show_modal: false,
+      fields: [
+        {
+          name: 'permissionId',
+          title: 'Permission Id'
+        },
+        {
+          name: 'permissionName',
+          title: 'Permission Name'
+        },
+        {
+          name: '__slot:action',
+          title: 'Action'
+        }
+      ],
     }
   },
   mounted() {
     this.getPermissions()
+    this.itemsPerPage = 5
+  },
+  created() {
+    this.getPermissions();
   },
   methods: {
+    dataManager(sortOrder, pagination) {
+      if (this.permissions.length < 1) return
+      let local = this.permissions
+
+      if (sortOrder.length > 0) {
+        local = _.orderBy(
+          local,
+          sortOrder[0].sortField,
+          sortOrder[0].direction
+        )
+      }
+
+      pagination = this.$refs.vuetable.makePagination(
+        local.length,
+        this.itemsPerPage
+      )
+
+      const from = pagination.from - 1
+      const to = from + this.itemsPerPage
+
+      return {
+        pagination: pagination,
+        data: _.slice(local, from, to)
+      }
+    },
     getPermissions() {
       API.get('api/usermanagement/v1/permissions')
         .then(response => {
@@ -113,7 +176,7 @@ export default {
         })
     },
     viewDetails(id) {
-      router.push('/permissions/' + id)
+      router.push('/permissions/' + id.permissionId)
     },
     showEditModal(item) {
       this.show_modal_edit = true
@@ -128,6 +191,7 @@ export default {
       (this.form.permissionName === '') ? this.isName = true : this.isName = false;
       if (!(this.isName || this.isCode)) {
         this.confirmCreatePermission();
+        this.getPermissions();
       }
 
     },
@@ -160,6 +224,7 @@ export default {
             })
             this.show_modal_edit = false
             this.spinning_e = false
+            this.getPermissions();
           }
         })
         .catch(error => {
@@ -175,7 +240,7 @@ export default {
         okType: 'danger',
         cancelText: 'No',
         onOk() {
-          API.delete(`api/usermanagement/v1/permissions/${id}`)
+          API.delete(`api/usermanagement/v1/permissions/${id.permissionId}`)
             .then(res => {
               notification.success({
                 message: 'Permission deleted successfully'
@@ -198,20 +263,6 @@ export default {
 </script>
 
 <style scoped>
-.the-table thead tr th {
-  border: none;
-}
-
-.the-table thead tr th:first-child {
-  border-bottom-left-radius: 10px;
-  border-top-left-radius: 10px;
-}
-
-.the-table thead tr th:last-child {
-  border-bottom-right-radius: 10px;
-  border-top-right-radius: 10px;
-}
-
 .spin-content {
   border: 1px solid #91d5ff;
   background-color: #e6f7ff;

@@ -50,6 +50,11 @@ const routes = [
         component: () => import('../components/farmers/viewFarmer')
       },
       {
+        path: '/user-management',
+        name: 'user-management',
+        component: () => import('../components/userManagement/index')
+      },
+      {
         path: '/branches',
         name: 'branches',
         component: () => import('../components/userManagement/branch/index')
@@ -58,11 +63,6 @@ const routes = [
         path: '/departments',
         name: 'departments',
         component: () => import('../components/userManagement/department/Department')
-      },
-      {
-        path: '/departments/:id',
-        name: 'view Department',
-        component: () => import('../components/userManagement/department/viewDepartment')
       },
       {
         path: '/roles',
