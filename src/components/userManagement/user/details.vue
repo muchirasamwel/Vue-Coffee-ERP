@@ -6,129 +6,300 @@
       </div>
     </div>
     <div class="view-item-body">
-      <div class="item-body">
-        <div class="item-tittle">User Details</div>
-        <table class="table table-hover">
-          <tbody>
-          <tr>
-            <td class="bold">
-              Name
-            </td>
-            <td>
-              Cetric Okola Omwirikha
-            </td>
-          </tr>
-          <tr>
-            <td class="bold">
-              Email
-            </td>
-            <td>
-              okolacetric@gmail.com
-            </td>
-          </tr>
-          <tr>
-            <td class="bold">
-              Phone Number
-            </td>
-            <td>
-              +254704145832
-            </td>
-          </tr>
-          </tbody>
-        </table>
+      <div v-if="loading">
+        <a-spin tip="Fetching user...">
+          <div class="spin-content">
+          </div>
+        </a-spin>
       </div>
-      <div class="item-body">
-        <div class="item-tittle">Actions</div>
-        <a-button type="danger">Disable User</a-button>
+      <div v-if="feedback !== ''">
+        <a-alert
+          message="Error"
+          description="This is an error message about copywriting."
+          type="error"
+          show-icon
+        />
       </div>
-    </div>
-    <div class="item-body">
-      <div class="item-tittle">Access Control</div>
-      <div class="sub-title">Assign Roles to User</div>
-      <div>
-        <a-select
-          mode="multiple"
-          style="width: 312px"
-          placeholder="Please select role"
-          v-model="select_model"
-          @change="handleChange"
-        >
-          <a-select-option v-for="data in selectData" :key="data.id">
-            {{data.name}}
-          </a-select-option>
-        </a-select>
-      </div>
-      <div v-if="select_model.length > 0" style="margin: 10px 0">
-        <button class="the-btn sec-color">Assign Roles</button>
-      </div>
-      <div class="sub-title">Assign Roles to User</div>
-      <div>
-        <table  class="table custom-table table-bordered table-hover">
-          <thead>
-          <tr>
-            <th>Role</th>
-            <th>Action</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td>Operations Basic</td>
-            <td><a-button @click="showRevokeConfirm(5)" type="danger">Revoke</a-button> </td>
-          </tr>
-          <tr>
-            <td>Operations Client side access</td>
-            <td><a-button @click="showRevokeConfirm(5)" type="danger">Revoke</a-button> </td>
-          </tr>
-          </tbody>
-        </table>
+      <div v-if="user !== ''">
+        <div class="item-body">
+          <div class="item-tittle">User Details</div>
+          <table class="table table-hover">
+            <tbody>
+            <tr>
+              <td class="bold">
+                Name
+              </td>
+              <td>
+                {{ user.firstName }} {{ user.middleName }} {{ user.lastName }}
+              </td>
+            </tr>
+            <tr>
+              <td class="bold">
+                Id Number
+              </td>
+              <td>
+                {{ user.idNumber }}
+              </td>
+            </tr>
+            <tr>
+              <td class="bold">
+                Email
+              </td>
+              <td>
+                {{ user.email }}
+              </td>
+            </tr>
+            <tr>
+              <td class="bold">
+                Phone Number
+              </td>
+              <td>
+                {{ user.phoneNo }}
+              </td>
+            </tr>
+            <tr>
+              <td class="bold">
+                Branch
+              </td>
+              <td>
+                {{ user.branch.branchCode }} - {{ user.branch.branchName }}
+              </td>
+            </tr>
+            <tr>
+              <td class="bold">
+                Department
+              </td>
+              <td>
+                {{ user.department.deptCode }} - {{ user.department.deptName }}
+              </td>
+            </tr>
+            <tr>
+              <td class="bold">
+                Status
+              </td>
+              <td>
+                <a-tag color="green" v-if="user.status === 'Active'">
+                  active
+                </a-tag>
+                <a-tag color="red" v-else>
+                  inactive
+                </a-tag>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="item-body">
+          <div class="item-tittle">Actions</div>
+          <a-button type="danger" v-if="user.status === 'Active'"
+                    @click="toggleUserStatus('Deactivated')">Disable User
+          </a-button>
+          <a-button type="primary" v-else
+                    @click="toggleUserStatus('Active')">Activate User
+          </a-button>
+        </div>
+        <div class="item-body">
+          <div class="item-tittle">Access Control</div>
+          <div class="sub-title">Assign Roles to User</div>
+          <div>
+            <a-select
+              mode="multiple"
+              style="width: 300px"
+              placeholder="Please select role"
+              v-model="select_model">
+              <a-select-option v-for="data in newRoles" :key="data.groupCode">
+                {{ data.groupName }}
+              </a-select-option>
+            </a-select>
+          </div>
+          <div v-if="select_model.length > 0" style="margin: 10px 0">
+            <a-button type="primary" :loading="btnLoading" @click="assignRoles">Assign Roles</a-button>
+          </div>
+          <div class="sub-title">Assign Roles to User</div>
+          <div>
+            <table class="table custom-table table-bordered table-hover">
+              <thead>
+              <tr>
+                <th>Code</th>
+                <th>Role</th>
+                <th>Action</th>
+              </tr>
+              </thead>
+              <tbody v-for="role in user.userGroups">
+              <tr>
+                <td>{{ role.groupCode }}</td>
+                <td>{{ role.groupName }}</td>
+                <td>
+                  <a-tooltip placement="bottomLeft">
+                    <template slot="title">
+                      <span>Revoke</span>
+                    </template>
+                    <div style="cursor: pointer" class="item-icon pointer-hand"
+                         @click="showRevokeConfirm(role.groupCode)">
+                      <img src="../../../assets/icons/delete.svg" alt="" width="20px">
+                    </div>
+                  </a-tooltip>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import {notification, Select} from 'ant-design-vue'
+import {Alert, notification, Select, Spin, Tag, Tooltip} from 'ant-design-vue'
+import API from "../../../api";
+import _ from 'lodash';
+
 export default {
   name: 'user_details',
   components: {
     'a-select': Select,
     'a-select-option': Select.Option,
+    'a-alert': Alert,
+    'a-spin': Spin,
+    'a-tag': Tag,
+    'a-tooltip': Tooltip
   },
-  data () {
+  data() {
     return {
       select_model: [],
-      selectData: [
-        { id: 1, name: 'Cetric' },
-        { id: 2, name: 'Benson' },
-        { id: 3, name: 'Clinton' },
-        { id: 4, name: 'Joyce' },
-        { id: 5, name: 'Sam' },
-        { id: 6, name: 'George' },
-        { id: 7, name: 'Elvis' },
-        { id: 8, name: 'Kevin' },
-        { id: 9, name: 'Fred' },
-      ]
+      user: '',
+      loading: false,
+      feedback: '',
+      btnLoading: false,
+      roles: '',
     }
   },
+  computed: {
+    newRoles() {
+      return _.differenceBy(this.roles, this.user.userGroups, 'groupCode');
+    }
+  },
+  mounted() {
+    this.getUser(this.$route.params.id)
+    this.getRoles();
+  },
   methods: {
-    showRevokeConfirm (id) {
+    toggleUserStatus(status) {
+      let userId = this.user.userId
+      let url = `api/usermanagement/v1/users/status/${userId}?status=${status}`
+      API.post(url )
+        .then(response => {
+          if (response.data.status === 0) {
+            if (status === 'Active') {
+              notification.success({
+                message: 'User activated successfully.'
+              })
+              this.user.status = 'Active';
+            } else {
+              notification.success({
+                message: 'User disabled successfully.'
+              })
+              this.user.status = 'Deactivated';
+            }
+          }
+        })
+        .catch(error => {
+          console.log(error.response)
+          notification.error({
+            message: 'An error occured. Try again.'
+          })
+        })
+    },
+    assignRoles() {
+      this.btnLoading = true;
+      let form = {}
+      let arr = [];
+      let len = this.select_model.length;
+      for (let i = 0; i < len; i++) {
+        arr.push({
+          groupCode: this.select_model[i],
+        });
+      }
+      form.userId = this.user.userId;
+      form.updatedUserGroups = arr;
+      form.revokedUserGroups = [];
+      API.post(`api/usermanagement/v1/users/userGroups`, form)
+        .then(response => {
+          if (response.data.status === 0) {
+            notification.success({
+              message: 'Role(s) assigned successfully.'
+            })
+            this.btnLoading = false;
+            this.select_model = []
+            location.reload();
+          }
+        })
+        .catch(error => {
+          console.log(error.response)
+          this.btnLoading = false;
+          notification.error({
+            message: 'Role(s) cannot be assigned, possibly an error occured.!.'
+          })
+        })
+    },
+    getRoles() {
+      API.get('api/usermanagement/v1/userGroups')
+        .then(response => {
+          this.roles = response.data
+          this.loading = false;
+        })
+        .catch(e => {
+          this.loading = false;
+        })
+    },
+    getUser(id) {
+      this.loading = true
+      API.get('api/usermanagement/v1/users', {
+        params: {
+          userId: id
+        }
+      })
+        .then(response => {
+          this.user = response.data
+          this.loading = false
+        })
+        .catch(err => {
+          this.feedback = err.response.data
+        })
+    },
+    showRevokeConfirm(id) {
+      let user = this.user
       this.$confirm({
         title: 'Are you sure you want to revoke this role form the user?',
         okText: 'Yes',
         okType: 'danger',
         cancelText: 'No',
-        onOk () {
-          notification.success({
-            message: id + 'Role revoked successfully'
-          })
+        onOk() {
+          let arr = [{groupCode: id}]
+          let form = {}
+          form.userId = user.userId;
+          form.updatedUserGroups = [];
+          form.revokedUserGroups = arr;
+          API.post(`api/usermanagement/v1/users/userGroups`, form)
+            .then(response => {
+              if (response.data.status === 0) {
+                notification.success({
+                  message: 'Role revoked successfully.'
+                })
+              }
+            })
+            .catch(error => {
+              console.log(error.response)
+              notification.error({
+                message: 'Role cannot be revoked, possibly an error occured.!.'
+              })
+            })
         },
-        onCancel () {
+        onCancel() {
         }
       })
     },
-    handleChange () {
-      console.log(this.select_model)
-    }
   }
 }
 </script>
@@ -140,18 +311,24 @@ export default {
   padding: 0 10px
   margin-bottom: 20px
   color: #008cff
+
 .custom-table
   width: 70%
-.search-filter
-  display: inline-flex
-  float: right
-  margin-bottom: 10px
+
 .sub-title
   padding: 20px 0
   color: #1fd242
   font-weight: bold
+
 .bold
   font-weight: bold
+
+.spin-content
+  border: 1px solid #91d5ff
+  background-color: #e6f7ff
+  height: 300px
+  padding: 30px
+
 @media only screen and (max-width: 450px)
   .custom-table
     width: 100%

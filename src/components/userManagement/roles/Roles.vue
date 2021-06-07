@@ -380,7 +380,6 @@ export default {
       this.spinning_e = true
       let arr = [];
       let len = this.userPermissions.length;
-      console.log(len)
       for (let i = 0; i < len; i++) {
         arr.push({
           permissionId: this.userPermissions[i].permissionId,
@@ -401,7 +400,6 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error.response)
           this.spinning_e = false
           this.feedback_two = error.response.data.message
         })

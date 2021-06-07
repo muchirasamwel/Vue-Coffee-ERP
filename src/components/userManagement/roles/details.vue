@@ -6,206 +6,198 @@
       </div>
     </div>
     <div class="view-item-body">
-      <div class="item-body">
+      <div class="">
         <div class="item-tittle">Role Details</div>
-        <table class="table table-hover">
-          <tbody>
-          <tr>
-            <td class="bold">
-              Role Code
-            </td>
-            <td>
-              R001
-            </td>
-          </tr>
-          <tr>
-            <td class="bold">
-              Role Name
-            </td>
-            <td>
-              Super Admin
-            </td>
-          </tr>
-          <tr>
-            <td class="bold">
-              Role Description
-            </td>
-            <td>
-              This is a super admin to handle all the details
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="item-body">
-        <div class="item-tittle">Membership</div>
-        <p>The following are the members of this role</p>
-        <div>
-          <div class="search-filter">
-            <search-bar :search-label='"Search Role ..."'></search-bar>
-          </div>
+        <div v-if="loading">
+          <a-spin tip="Fetching the role...">
+            <div class="spin-content">
+            </div>
+          </a-spin>
+        </div>
+        <div v-if="feedback !== ''">
+          <a-alert
+            message="Error"
+            description="This is an error message about copywriting."
+            type="error"
+            show-icon
+          />
+        </div>
+        <div v-if="role !== ''">
+          <table class="table table-hover">
+            <tbody>
+            <tr>
+              <td class="bold">
+                Role Code
+              </td>
+              <td>
+                {{ role.groupCode }}
+              </td>
+            </tr>
+            <tr>
+              <td class="bold">
+                Role Name
+              </td>
+              <td>
+                {{ role.groupName }}
+              </td>
+            </tr>
+            </tbody>
+          </table>
           <div>
-            <vuetable ref="vuetable"
-                      :api-mode="true"
-                      api-url="https://vuetable.ratiw.net/api/users"
-                      :fields="fields"
-                      pagination-path=""
-                      @vuetable:pagination-data="onPaginationData"
-                      :append-params="tableState"
-                      :per-page="itemsPerPage"
-            >
-              <template slot="action" slot-scope="props">
-                <a-button class="action-btns" type="danger" shape="circle" icon="delete"
-                          @click="showDeleteConfirm(props.rowData.id)"/>
-              </template>
-            </vuetable>
-          </div>
-          <div class="pagination-footer">
-            <div>
-              <vuetable-pagination-info ref="paginationInfo"></vuetable-pagination-info>
-            </div>
-            <div>
-              <span>Rows per page</span>
-              <select style="background-color: #e3e6eb;outline: none; cursor: pointer ;border: none; border-radius: 9px"
-                      v-model="itemsPerPage" @change="changePerPage">
-                <option v-for="(option) in itemsPerPageOptions" :key="option" v-bind:value="option">{{
-                    option
-                  }}
-                </option>
-              </select>
-            </div>
-            <div>
-              <vuetable-pagination ref="pagination"
-                                   @vuetable-pagination:change-page="onChangePage"
-              ></vuetable-pagination>
-            </div>
+            <div class="item-tittle">Permissions</div>
+            <p>This role has been assigned the following permissions</p>
+            <button class="the-btn sec-color" @click="showModal">
+              <a-icon type="plus"/>
+              Add Permission to role
+            </button>
+            <table style="margin-top: 10px" class="table table-bordered table-hover">
+              <thead>
+              <tr>
+                <th>Permission ID</th>
+                <th>Name</th>
+                <th>Action</th>
+              </tr>
+              </thead>
+              <tbody v-for="permission in role.permissions">
+              <tr>
+                <td>{{ permission.permissionId }}</td>
+                <td>{{ permission.permissionName }}</td>
+                <td>
+                  <a-tooltip placement="bottomLeft">
+                    <template slot="title">
+                      <span>Revoke</span>
+                    </template>
+                    <div style="cursor: pointer" class="item-icon pointer-hand"
+                         @click="showRevokeModal(permission.permissionId)">
+                      <img src="../../../assets/icons/delete.svg" alt="" width="20px">
+                    </div>
+                  </a-tooltip>
+                </td>
+              </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
-      <div class="item-body">
-        <div class="item-tittle">Permissions</div>
-        <p>This role has been assigned the following permissions</p>
-        <button class="the-btn sec-color" @click="showModal">
-          <a-icon type="plus"/>
-          Add Permission to role
-        </button>
-        <table style="margin-top: 10px" class="table table-bordered table-hover">
-          <thead>
-          <tr>
-            <th>Permission ID</th>
-            <th>Name</th>
-            <th>Action</th>
-          </tr>
-          </thead>
-          <tbody>
-         <tr>
-           <td>4</td>
-           <td>addusers</td>
-           <td><a-button @click="showRevokeConfirm(5)" type="danger">Revoke</a-button> </td>
-         </tr>
-         <tr>
-           <td>5</td>
-           <td>system:administration</td>
-           <td><a-button @click="showRevokeConfirm(5)" type="danger">Revoke</a-button> </td>
-         </tr>
-         <tr>
-           <td>7</td>
-           <td>viewactivitylog</td>
-           <td><a-button @click="showRevokeConfirm(5)" type="danger">Revoke</a-button> </td>
-         </tr>
-          </tbody>
-        </table>
-      </div>
+      <!--    Add Permission to role modal-->
+      <a-modal width="90%" v-model="show_modal" centered title="Add Permission to role" on-ok="addPermissionToRole">
+        <h1>Some Permissions to add </h1>
+        <template slot="footer">
+          <a-button key="back" @click="handleCancel('add')">
+            Cancel
+          </a-button>
+          <a-button key="submit" type="primary" :loading="loading" @click="addPermissionToRole()">
+            Add Permission to role
+          </a-button>
+        </template>
+      </a-modal>
+      <!--    Add Permission to role modal -->
+
+      <a-modal v-model="visible"
+               cancelText="No"
+               okText="Yes"
+               okType="danger"
+               @ok="revokePermission">
+        <p>Are you sure you want to revoke permission from this Role?</p>
+      </a-modal>
     </div>
-    <!--    Add Permission to role modal-->
-    <a-modal width="90%" v-model="show_modal" centered title="Add Permission to role" on-ok="addPermissionToRole">
-      <h1>Some Permissions to add </h1>
-      <template slot="footer">
-        <a-button key="back" @click="handleCancel('add')">
-          Cancel
-        </a-button>
-        <a-button key="submit" type="primary" :loading="loading" @click="addPermissionToRole()">
-          Add Permission to role
-        </a-button>
-      </template>
-    </a-modal>
-    <!--    Add Permission to role modal -->
   </div>
 </template>
 
 <script>
-import { Modal, Icon, notification } from 'ant-design-vue'
-import vueTableMixin from '../../mixins/vuetable_mixin'
+import {Modal, Icon, notification, Spin, Tooltip} from 'ant-design-vue'
+import API from "../../../api";
+import _ from 'lodash';
 
 export default {
-  mixins: [vueTableMixin],
   name: 'role_details',
   components: {
     'a-icon': Icon,
-    'a-modal': Modal
+    'a-modal': Modal,
+    'a-spin': Spin,
+    'a-tooltip': Tooltip
   },
-  data () {
+  data() {
     return {
-      fields: [
-        { name: 'id', sortField: 'id', title: 'Member Id' },
-        { name: 'nickname', sortField: 'name', title: 'Username' },
-        { name: 'name', sortField: 'name', title: 'Name' },
-        { name: '__slot:action', title: 'Remove' }
-      ],
-      tableState: {},
-      promise: true,
-      itemsPerPage: 0,
       show_modal: false,
       loading: false,
+      role: '',
+      visible: false,
+      feedback: '',
+      selectedPermission: '',
       form: {}
     }
   },
   methods: {
-    showModal () {
+    showModal() {
       this.show_modal = true
     },
-    handleCancel () {
+    showRevokeModal(id) {
+      this.selectedPermission = id;
+      this.visible = true;
+    },
+    handleCancel() {
       this.show_modal = false
       this.loading = false
     },
-    addPermissionToRole () {
+    addPermissionToRole() {
       this.loading = true
       this.show_modal = false
     },
-    showDeleteConfirm (id) {
-      this.$confirm({
-        title: 'Are you sure you want to remove user from this Role?',
-        okText: 'Yes',
-        okType: 'danger',
-        cancelText: 'No',
-        onOk () {
-          notification.success({
-            message: id + 'Role deleted successfully'
-          })
-        },
-        onCancel () {
+    getRole(id) {
+      this.loading = true
+      API.get('api/usermanagement/v1/userGroups', {
+        params: {
+          groupCode: id
         }
       })
+        .then(response => {
+          this.role = response.data
+          this.loading = false
+        })
+        .catch(err => {
+          this.feedback = err.response.data
+        })
     },
-    showRevokeConfirm (id) {
-      this.$confirm({
-        title: 'Are you sure you want to revoke permission from this Role?',
-        okText: 'Yes',
-        okType: 'danger',
-        cancelText: 'No',
-        onOk () {
-          notification.success({
-            message: id + 'Permission revoked successfully'
-          })
-        },
-        onCancel () {
-        }
-      })
-    }
+    revokePermission() {
+      let form = {}
+      let id = this.selectedPermission;
+      form.groupCode = this.role.groupCode;
+      form.groupName = this.role.groupName;
+      _.remove(this.role.permissions, function (e) {
+        return e.permissionId === id
+      });
+      let permissions = [];
+      permissions = Array.from(this.role.permissions);
+      let arr = [];
+      let len = permissions.length;
+      for (let i = 0; i < len; i++) {
+        arr.push({
+          permissionId: permissions[i].permissionId,
+        });
+      }
+      form.permissions = []
+      for (let i = 0; i < arr.length; i++) {
+        form.permissions[i] = arr[i];
+      }
+      API.put(`api/usermanagement/v1/userGroups/${form.groupCode}`, form)
+        .then(response => {
+          if (response.data.status === 0) {
+            notification.success({
+              message: 'Permission revoked successfully.'
+            })
+            this.visible = false;
+          }
+        })
+        .catch(error => {
+          console.log(error.response)
+        })
+    },
   },
-  mounted () {
-    this.itemsPerPage = 5
-  }
+  mounted() {
+    const id = this.$route.params.id
+    this.getRole(id)
+  },
 }
 </script>
 
@@ -217,10 +209,11 @@ export default {
   margin-bottom: 20px
   color: #008cff
 
-.search-filter
-  display: inline-flex
-  float: right
-  margin-bottom: 10px
+.spin-content
+  border: 1px solid #91d5ff
+  background-color: #e6f7ff
+  height: 300px
+  padding: 30px
 
 .bold
   font-weight: bold

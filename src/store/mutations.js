@@ -13,6 +13,14 @@ let mutations = {
       console.log('fetch branches error', err)
     })
   },
+  FETCH_DEPARTMENTS (state) {
+    API.get('api/usermanagement/v1/departments')
+      .then(res => {
+        state.departments = res.data
+      }).catch(err => {
+      console.log('fetch departments error', err)
+    })
+  },
 
   FETCH_COFFEE_TYPES (state) {
     API.get('api/booking/v1/coffeeTypes')

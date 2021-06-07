@@ -8,6 +8,9 @@ let getters = {
   branches: state => {
     return state.branches
   },
+  departments: state => {
+    return state.departments
+  },
   coffeeTypes: state => {
     return state.coffeeTypes
   },
