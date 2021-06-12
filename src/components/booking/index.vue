@@ -9,8 +9,8 @@
 
           <label>Grower Category</label>
           <select v-model="form.growerCategory" class="form-input">
-            <option value="Farmer">Farmer</option>
-            <option value="Cooperative">Cooperative</option>
+            <option value="FARMER">Farmer</option>
+            <option value="COOPERATIVE">Cooperative</option>
           </select>
 
           <label>Grower Code</label>
@@ -26,6 +26,7 @@
           <select v-model="form.deliveryMode" class="form-input">
             <option value="ROAD">Road</option>
             <option value="RAIL">Rail</option>
+            <option value="OTHER">Other</option>
           </select>
 
           <label>Delivery Description</label>
@@ -83,8 +84,8 @@
 
           <label for="growerCategory">Grower Category</label>
           <select id="growerCategory" v-model="selectedBooking.growerCategory" class="form-input">
-            <option value="Farmer">Farmer</option>
-            <option value="Cooperative">Cooperative</option>
+            <option value="FARMER">Farmer</option>
+            <option value="COOPERATIVE">Cooperative</option>
           </select>
 
           <label>Grower Code</label>
@@ -100,6 +101,7 @@
           <select v-model="selectedBooking.deliveryMode" class="form-input">
             <option value="ROAD">Road</option>
             <option value="RAIL">Rail</option>
+            <option value="OTHER">Other</option>
           </select>
 
           <label>Delivery Description</label>
@@ -126,7 +128,8 @@
           <label>No. of Bags</label>
           <input class="form-input" type="text" v-model="coffee.bags">
           <div class="row d-flex justify-content-end m-2">
-            <a-button type="primary" class="float-right" :disabled="!canAddCoffee" :loading="loading" @click="addCoffee" :small="true">
+            <a-button type="primary" class="float-right" :disabled="!canAddCoffee" :loading="loading" @click="addCoffee"
+                      :small="true">
               Add Coffee
             </a-button>
           </div>
@@ -242,7 +245,7 @@
         {{ is_booking ? 'Coffee Types' : 'Booking' }}
       </button>
     </div>
-    <div v-show="!is_booking">
+    <div v-if="!is_booking">
       <coffee-types></coffee-types>
     </div>
 
@@ -395,7 +398,7 @@ export default {
           title: 'Earliest Date'
         },
         {
-          name: 'lastedtExpectedDate',
+          name: 'lastestExpectedDate',
           title: 'Lastest Date'
         },
         {
@@ -438,7 +441,7 @@ export default {
       handler: function () {
         this.canAddCoffee = (this.coffee.hasOwnProperty('bags') && this.coffee.hasOwnProperty('type') &&
           this.coffee.bags.match(/^[0-9]{1,7}$/g) &&
-          this.coffee.bags !== 0 &&
+          this.coffee.bags > 0 &&
           (this.coffee.type.length > 1))
       },
       deep: true
@@ -481,16 +484,16 @@ export default {
       }
 
       if (this.bookingFilter.date_option === 'as_at_date') {
-        this.bookingFilter.asAtDate = moment(this.bookingFilter.asAtDate).format('YYYY-MM-DD')
+        this.bookingFilter.asAtDate = moment(this.bookingFilter.asAtDate).format('DD-MM-YYYY')
         this.bookingFilter.startDate = 'null'
         this.bookingFilter.endDate = 'null'
       } else {
         if (this.bookingFilter.date_option !== 'custom') {
-          this.bookingFilter.startDate = moment(this.bookingFilter.startDate).format('YYYY-MM-DD')
+          this.bookingFilter.startDate = moment(this.bookingFilter.startDate).format('DD-MM-YYYY')
           this.bookingFilter.endDate = 'null'
         } else {
-          this.bookingFilter.startDate = moment(this.bookingFilter.startDate).format('YYYY-MM-DD')
-          this.bookingFilter.endDate = moment(this.bookingFilter.endDate).format('YYYY-MM-DD')
+          this.bookingFilter.startDate = moment(this.bookingFilter.startDate).format('DD-MM-YYYY')
+          this.bookingFilter.endDate = moment(this.bookingFilter.endDate).format('DD-MM-YYYY')
           this.bookingFilter.asAtDate = 'null'
         }
       }
@@ -521,19 +524,30 @@ export default {
         coffeeType: this.coffee.type,
         noOfbags: parseInt(this.coffee.bags)
       }
-      this.bookedCoffeeTypes.push(data)
+      const exists = this.bookedCoffeeTypes.filter(coffee => {
+        if (coffee.coffeeType === this.coffee.type) {
+          coffee.noOfbags += parseInt(this.coffee.bags)
+          return true
+        }
+        return false
+      })
 
+      if (exists.length == 0) {
+        this.bookedCoffeeTypes.push(data)
+      }
       this.updateSelect()
       this.loading = false
     },
     async updateSelect () {
       this.bookedCoffeeTypes = await this.createIds(this.bookedCoffeeTypes)
       eventBus.$emit('updateSelectData', this.bookedCoffeeTypes)
-    },
+    }
+    ,
     viewDetails (booking) {
       this.selectedBooking = Object.assign({}, booking)
       this.show_modal_view = true
-    },
+    }
+    ,
     approveBooking (approved = true) {
       let booking = this.selectedBooking
       const saveData = {
@@ -558,20 +572,24 @@ export default {
         .catch(err => {
           console.log('approve error', err)
         })
-    },
+    }
+    ,
     showApprove (booking, approved = true) {
       this.selectedBooking = booking
       approved ? this.approve_modal = true : this.reject_modal = true
-    },
+    }
+    ,
     async showEditModal () {
       this.bookedCoffeeTypes = Object.assign([], this.selectedBooking.expectedQuantity)
       this.bookedCoffeeTypes = await this.createIds(this.bookedCoffeeTypes)
       this.show_modal_edit = true
-    },
+    }
+    ,
     showModal () {
       this.bookedCoffeeTypes = []
       this.show_modal = true
-    },
+    }
+    ,
     handleCancel (type) {
       if (type === 'edit') {
         this.show_modal_edit = false
@@ -582,7 +600,8 @@ export default {
       } else {
         this.show_modal = false
       }
-    },
+    }
+    ,
     getBookings (query = null) {
       let api = 'api/booking/v1/coffee/book'
       if (query != null) {
@@ -596,16 +615,17 @@ export default {
         .catch(error => {
           console.log(error)
         })
-    },
+    }
+    ,
     createBooking () {
       this.loading = true
-      const expectedQuantity = Object.assign({}, this.bookedCoffeeTypes.map(function (item) {
+      const expectedQuantity = Object.assign([], this.bookedCoffeeTypes.map(function (item) {
         delete item.id
         return item
       }))
       const submitData = Object.assign({}, this.form)
-      submitData.earliestExpectedDate = moment(submitData.earliestExpectedDate).format('YYYY-MM-DD')
-      submitData.lastestExpectedDate = moment(submitData.lastestExpectedDate).format('YYYY-MM-DD')
+      submitData.earliestExpectedDate = moment(submitData.earliestExpectedDate).format('DD-MM-YYYY')
+      submitData.lastestExpectedDate = moment(submitData.lastestExpectedDate).format('DD-MM-YYYY')
       submitData.expectedQuantity = expectedQuantity
       API.post('api/booking/v1/coffee/book', submitData)
         .then(response => {
@@ -613,6 +633,7 @@ export default {
             notification.success({
               message: 'Booking saved successfully.'
             })
+            this.getBookings()
             this.show_modal = false
           } else {
             notification.error({
@@ -625,16 +646,17 @@ export default {
           this.loading = false
           this.feedback = error.response.data.message
         })
-    },
+    }
+    ,
     editBooking () {
       this.edit_loading = true
-      const expectedQuantity = Object.assign({}, this.bookedCoffeeTypes.map(function (item) {
+      const expectedQuantity = Object.assign([], this.bookedCoffeeTypes.map(function (item) {
         delete item.id
         return item
       }))
       const submitData = Object.assign({}, this.selectedBooking)
-      submitData.earliestExpectedDate = moment(submitData.earliestExpectedDate).format('YYYY-MM-DD')
-      submitData.lastestExpectedDate = moment(submitData.lastestExpectedDate).format('YYYY-MM-DD')
+      submitData.earliestExpectedDate = moment(submitData.earliestExpectedDate).format('DD-MM-YYYY')
+      submitData.lastestExpectedDate = moment(submitData.lastestExpectedDate).format('DD-MM-YYYY')
       submitData.expectedQuantity = expectedQuantity
       API.put('api/booking/v1/coffee/book', submitData)
         .then(response => {
@@ -642,6 +664,7 @@ export default {
             notification.success({
               message: 'Booking saved successfully.'
             })
+            this.getBookings()
             this.show_modal_edit = false
           } else {
             notification.error({
@@ -651,10 +674,12 @@ export default {
           this.edit_loading = false
         })
         .catch(error => {
+          console.log('error', error.response)
           this.edit_loading = false
           this.feedback = error.response.data.message
         })
-    },
+    }
+    ,
     showDeleteConfirm (id) {
       this.$confirm({
         title: 'Confirm Approval?',

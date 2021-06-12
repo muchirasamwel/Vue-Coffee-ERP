@@ -148,6 +148,7 @@ export default {
             notification.success({
               message: 'Coffee type added successfully'
             })
+            this.$store.commit('FETCH_COFFEE_TYPES')
           } else {
             notification.error({
               message: 'An error occurred when adding coffee type'
@@ -165,7 +166,9 @@ export default {
   created () {
     if (this.coffeeTypes.length === 0) {
       this.$store.commit('FETCH_COFFEE_TYPES')
+      // console.log('Fetching types')
     }
+    // console.log(this.coffeeTypes, 'types')
   }
 }
 </script>

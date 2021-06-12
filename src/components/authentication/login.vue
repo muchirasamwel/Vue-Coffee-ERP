@@ -100,6 +100,7 @@ export default {
           this.isPassword = false
           this.isEmail = false
           if (res.data.status === 0) {
+            localStorage.api_token = res.data.token
             this.$store.commit('SET_LOGGEDINUSER', res.data)
             this.loading = false
             notification.success({
