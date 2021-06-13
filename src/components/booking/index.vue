@@ -145,7 +145,8 @@
         <a-button key="back" @click="handleCancel('edit')">
           Cancel
         </a-button>
-        <a-button key="submit" type="primary" :loading="edit_loading" @click="editBooking">
+        <a-button key="submit" type="primary" :loading="edit_loading" @click="editBooking"
+                  v-if="selectedBooking.status==='PENDING'">
           Edit Booking
         </a-button>
       </template>
@@ -194,7 +195,11 @@
 
       </div>
       <template slot="footer">
-        <a-button key="submit" type="primary" :loading="edit_loading" @click="showEditModal">
+        <a-button key="back" @click="handleCancel('show')">
+          Cancel
+        </a-button>
+        <a-button key="submit" type="primary" :loading="edit_loading" @click="showEditModal"
+                  v-if="selectedBooking.status==='PENDING'">
           Edit Booking
         </a-button>
       </template>
@@ -315,10 +320,12 @@
                 <label class="action-btns" @click="viewDetails(props.rowData)">
                   <img src="../../assets/icons/view.svg" alt="" width="30px">
                 </label>
-                <label class="action-btns" @click="showApprove(props.rowData,true)">
+                <label class="action-btns" @click="showApprove(props.rowData,true)"
+                       v-show="props.rowData.status=='PENDING'">
                   <img src="../../assets/icons/ticked.svg" alt="" width="30px">
                 </label>
-                <label class="action-btns" @click="showApprove(props.rowData,false)">
+                <label class="action-btns" @click="showApprove(props.rowData,false)"
+                       v-show="props.rowData.status=='PENDING'">
                   <img src="../../assets/icons/reject.svg" alt="" width="30px">
                 </label>
               </div>
@@ -595,6 +602,8 @@ export default {
         this.show_modal_edit = false
       } else if (type === 'approve') {
         this.approve_modal = false
+      } else if (type === 'show') {
+        this.show_modal_view = false
       } else if (type === 'reject') {
         this.reject_modal = false
       } else {
@@ -662,7 +671,7 @@ export default {
         .then(response => {
           if (response.data.status === 0) {
             notification.success({
-              message: 'Booking saved successfully.'
+              message: 'Booking updated successfully.'
             })
             this.getBookings()
             this.show_modal_edit = false
