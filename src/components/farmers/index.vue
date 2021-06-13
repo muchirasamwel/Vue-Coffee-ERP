@@ -1,26 +1,64 @@
 <template>
   <div>
     <!--add-->
-    <a-modal v-model="show_modal" centered title="Add Farmer" on-ok="createDepartment">
-      <label for="name">Farmer Name</label>
-      <input class="form-input" type="text" v-model="form.name" id="name">
-      <label for="location">Location</label>
-      <input class="form-input" type="text" v-model="form.location" id="location">
-      <label for="person_name">Contact Person Name</label>
-      <input class="form-input" type="text" v-model="form.contactPersonName" id="person_name">
-      <label for="person_phone">Contact Person Name</label>
-      <input class="form-input" type="text" v-model="form.contactPersonPhone" id="person_phone">
-      <label for="officer">Field Officer</label>
-      <input class="form-input" type="text" v-model="form.fieldOfficer" id="officer">
-      <label for="officer_phone">Field Officer Phone</label>
-      <input class="form-input" type="text" v-model="form.fieldOfficerPhone" id="officer_phone">
-      <label for="manager">Manager</label>
-      <input class="form-input" type="text" v-model="form.manager" id="manager">
+    <a-modal v-model="show_modal" centered width="900px" title="Add Farmer" on-ok="crea">
+      <div>
+        <a-alert v-if="feedback !== ''" type="error" :message=feedback banner/>
+      </div>
+      <div class="row justify-content-between form-content">
+        <div class="col-md-6">
+          <label for="fname">First Name <span>*</span></label>
+          <input class="form-input" type="text" v-model="form.firstName" id="fname">
+          <label for="mname">Middle Name </label>
+          <input class="form-input" type="text" v-model="form.middleName" id="mname">
+          <label for="lname">Last Name <span>*</span> </label>
+          <input class="form-input" type="text" v-model="form.lastName" id="lname">
+          <label for="nId">National ID <span>*</span> </label>
+          <input class="form-input" type="number" v-model="form.nationalId" id="nId">
+          <label for="email">Email</label>
+          <input class="form-input" type="email" v-model="form.email" id="email">
+          <label for="code">Date of Birth <span>*</span></label><br>
+          <a-date-picker  style="width: 100%; margin-bottom: 10px" @change="selectDateOfBirth"/>
+        </div>
+        <div class="col-md-6">
+          <label for="pNo">Primary Phone Number <span>*</span> </label>
+          <input class="form-input" type="number" v-model="form.primaryPhone" id="pNo">
+          <label for="sNo">Secondary Phone</label>
+          <input class="form-input" type="number" v-model="form.secondaryPhone" id="sNo">
+          <label for="code">Farmer Code</label>
+          <input class="form-input" type="text" v-model="form.code" id="code">
+          <label for="rcode">Region Code</label>
+          <input class="form-input" type="text" v-model="form.regionCode" id="rcode">
+          <label for="code">Gender</label>
+          <a-select placeholder="Select gender" style="width: 100%; margin-bottom: 10px" @change="selectGender">
+            <a-select-option value="MALE">
+              Male
+            </a-select-option>
+            <a-select-option value="FEMALE">
+              Female
+            </a-select-option>
+            <a-select-option value="UNKNOWN">
+              Unknown
+            </a-select-option>
+          </a-select>
+          <label for="code">Date of Joining<span>*</span></label><br>
+          <a-date-picker style="width: 100%; margin-bottom: 10px"  @change="selectDateOfJoining"/>
+          <br>
+        </div>
+      </div>
       <template slot="footer">
-        <a-button key="back" @click="handleCancel('add')">
+        <a-button key="back" @click="">
           Cancel
         </a-button>
-        <a-button key="submit" type="primary" :loading="loading" @click="createCooperative">
+        <a-tooltip v-if="!canAddFarmer" placement="leftTop">
+          <template slot="title">
+            <span>Fill all required fields</span>
+          </template>
+            <a-button key="submit" type="primary" style="margin-left: 10px"  :disabled="true">
+              Add Farmer
+            </a-button>
+        </a-tooltip>
+        <a-button key="submit" type="primary" v-if="canAddFarmer" :loading="loading" @click="createFarmer">
           Add Farmer
         </a-button>
       </template>
@@ -29,26 +67,12 @@
     <!--edit-->
     <a-modal v-model="show_modal_edit"
              title="Edit Farmer"
-             okType="primary" ok-text="Edit Farmer" cancel-text="close" @ok="editDepartment">
-      <label for="e-name">Farmer Name</label>
-      <input class="form-input" type="text" v-model="formEdit.name" id="e-name">
-      <label for="e-location">Location</label>
-      <input class="form-input" type="text" v-model="formEdit.location" id="e-location">
-      <label for="e-person_name">Contact Person Name</label>
-      <input class="form-input" type="text" v-model="formEdit.contactPersonName" id="e-person_name">
-      <label for="e-person_phone">Contact Person Phone</label>
-      <input class="form-input" type="text" v-model="formEdit.contactPersonPhone" id="e-person_phone">
-      <label for="e-officer">Field Officer</label>
-      <input class="form-input" type="text" v-model="formEdit.fieldOfficer" id="e-officer">
-      <label for="e-officer_phone">Field Officer Phone</label>
-      <input class="form-input" type="text" v-model="formEdit.fieldOfficerPhone" id="e-officer_phone">
-      <label for="e-manager">Manager</label>
-      <input class="form-input" type="text" v-model="formEdit.manager" id="e-manager">
+             okType="primary" ok-text="Edit Farmer" cancel-text="close" @ok="">
       <template slot="footer">
-        <a-button key="back" @click="handleCancel('edit')">
+        <a-button key="back" @click="">
           Cancel
         </a-button>
-        <a-button key="submit" type="primary" :loading="edit_loading" @click="editDepartment">
+        <a-button key="submit" type="primary" :loading="edit_loading" @click="">
           Edit Farmer
         </a-button>
       </template>
@@ -56,30 +80,35 @@
     <!--    edit-->
     <h3 class="tx-center">Farmers</h3>
     <div style="display: flex; justify-content: space-between; margin-bottom: 20px">
-      <button class="the-btn sec-color" @click="showModal"><a-icon type="plus" /> Add Farmer</button>
+      <button class="the-btn sec-color" @click="showModal">Add Farmer</button>
       <search-bar :search-label='"Search Farmer ..."'></search-bar>
     </div>
-    <div>
+    <div v-if="loading">
+      <a-spin tip="Fetching farmers...">
+        <div class="spin-content">
+        </div>
+      </a-spin>
+    </div>
+    <div v-else>
       <div>
         <vuetable ref="vuetable"
-                  :api-mode="true"
-                  api-url="https://vuetable.ratiw.net/api/users"
+                  :api-mode="false"
                   :fields="fields"
-                  pagination-path=""
-                  @vuetable:pagination-data="onPaginationData"
-                  :append-params="tableState"
                   :per-page="itemsPerPage"
-        >
+                  :data-manager="dataManager"
+                  pagination-path="pagination"
+                  @vuetable:pagination-data="onPaginationData">
           <template slot="action" slot-scope="props">
-            <label class="action-btns" @click="viewDetails(props.rowData.id)">
-              <img src="../../assets/icons/view.svg" alt="" width="30px">
-            </label>
-            <label class="action-btns" @click="showEditModal(props.rowData)">
-              <img src="../../assets/icons/edit.svg" alt="" width="30px">
-            </label>
-            <label class="action-btns" @click="showDeleteConfirm(props.rowData.id)">
-              <img src="../../assets/icons/delete.svg" alt="" width="30px">
-            </label>
+            <a-button class="ant-btn ant-btn-sm mb-3" v-if="isSmallDevice" @click="showActions=!showActions">...
+            </a-button>
+            <div class="table-actions" v-if="!isSmallDevice || showActions">
+              <label class="action-btns" @click="viewDetails(props.rowData)">
+                <img src="../../assets/icons/view.svg" alt="" width="30px">
+              </label>
+              <label class="action-btns" @click="showEditModal(props.rowData)">
+                <img src="../../assets/icons/edit.svg" alt="" width="30px">
+              </label>
+            </div>
           </template>
         </vuetable>
       </div>
@@ -105,83 +134,178 @@
 </template>
 
 <script>
+import responsiveMixin from '@/components/mixins/responsiveMixin'
 import vueTableMixin from '../mixins/vuetable_mixin'
-import { Modal, Icon, notification } from 'ant-design-vue'
-import router from '../../router'
+import {Alert, Modal, Spin, DatePicker, notification, Select, Tooltip} from 'ant-design-vue'
+import {API} from '../../api'
 
 export default {
-  mixins: [vueTableMixin],
-  name: 'Farmer',
+  mixins: [vueTableMixin, responsiveMixin],
+  name: 'Farmers',
   components: {
     'a-modal': Modal,
-    'a-icon': Icon
+    'a-alert': Alert,
+    'a-spin': Spin,
+    'a-select': Select,
+    'a-select-option': Select.Option,
+    'a-date-picker': DatePicker,
+    'a-tooltip': Tooltip
   },
-  data () {
+  data() {
     return {
-      fields: [
-        { name: 'id', sortField: 'grower_id', title: 'Grower Id' },
-        { name: 'nickname', title: 'ID' },
-        { name: 'name', title: 'FirstName' },
-        { name: 'name', title: 'Last Name' },
-        { name: '__slot:action', title: 'Action' }
-      ],
-      loading: false,
+      loading: true,
       edit_loading: false,
-      form: {},
+      spinning: false,
+      spinning_e: false,
+      feedback: '',
+      feedback_two: '',
+      showActions: false,
+      isCode: false,
+      isName: false,
+      farmers: [],
+      regionDetails: {
+        code: '', name: ''
+      },
+      form: {
+        firstName: '',lastName: '',primaryPhone: '',nationalId: '',dateOfBirth: '',dateOfJoining: '',
+      },
+      fields: [
+        {name: 'id', title: 'Id'},
+        {name: '__slot:name', title: 'Name'},
+        {name: 'email', title: 'Email'},
+        {name: 'primaryPhone', title: 'Phone No'},
+        {name: 'nationalId', title: 'National Id'},
+        {name: '__slot:action', title: 'Action'}
+      ],
       formEdit: {},
       visible: false,
       show_modal_edit: false,
       show_modal: false,
-      tableState: {},
-      promise: true,
-      itemsPerPage: 0
+      show_modal_more: false,
     }
   },
-  mounted () {
-    this.itemsPerPage = 10
+
+  computed: {
+    canAddFarmer() {
+      return this.confirmAddFarmer()
+    }
+  },
+  mounted() {
+    this.itemsPerPage = 5
+  },
+  created() {
+    this.getFarmers()
   },
   methods: {
-    viewDetails (id) {
-      router.push('/farmers/' + id)
+    selectGender(value) {
+      this.form.gender = value
     },
-    showEditModal (data) {
-      this.formEdit.name = data.name
-      this.formEdit.code = data.nickname
-      this.show_modal_edit = true
+    selectDateOfJoining(date, dateString) {
+      this.form.dateOfJoining = dateString
     },
-    showModal () {
-      this.show_modal = true
+    selectDateOfBirth(date, dateString) {
+      this.form.dateOfBirth = dateString
     },
-    handleCancel (type) {
-      if (type === 'edit') {
-        this.show_modal_edit = false
-      } else {
-        this.show_modal = false
+    confirmAddFarmer() {
+      return this.form.firstName !== '' && this.form.lastName !== '' &&
+        this.form.primaryPhone !== '' && this.form.nationalId !== '' && this.form.dateOfBirth !== ''
+        && this.form.dateOfJoining !== ''
+    },
+    dataManager(sortOrder, pagination) {
+      if (this.farmers.length < 1) return
+      let local = this.farmers
+
+      if (sortOrder.length > 0) {
+        local = _.orderBy(
+          local,
+          sortOrder[0].sortField,
+          sortOrder[0].direction
+        )
+      }
+
+      pagination = this.$refs.vuetable.makePagination(
+        local.length,
+        this.itemsPerPage
+      )
+
+      const from = pagination.from - 1
+      const to = from + this.itemsPerPage
+
+      return {
+        pagination: pagination,
+        data: _.slice(local, from, to)
       }
     },
-    createCooperative () {
-      this.loading = true
-      this.show_modal = false
+    getFarmers() {
+      API.get('api/organisation/farmers')
+        .then(response => {
+          this.farmers = response.data
+          this.loading = false;
+        })
+        .catch(e => {
+          this.loading = false;
+        })
     },
-    editDepartment () {
-      this.edit_loading = true
-      this.show_modal_edit = false
+    showEditModal(item) {
+      this.show_modal_edit = true
+      this.formEdit.name = item.name
+      this.formEdit.code = item.code
     },
-    showDeleteConfirm (id) {
-      this.$confirm({
-        title: 'Are you sure delete this Farmer?',
-        okText: 'Yes',
-        okType: 'danger',
-        cancelText: 'No',
-        onOk () {
-          notification.success({
-            message: id + 'Farmer deleted successfully'
-          })
-        },
-        onCancel () {
-        }
-      })
-    }
+    showModal() {
+      this.show_modal = true
+    },
+    createFarmer() {
+      this.feedback = '';
+      this.spinning = true
+      console.log(this.form)
+      API.post('api/organisation/farmers', this.form)
+        .then(response => {
+          if (response.data.status === 0) {
+            notification.success({
+              message: 'Farmer added successfully.'
+            })
+          }
+          this.farmers.push(this.form)
+          this.spinning = false
+          this.show_modal = false
+        })
+        .catch(error => {
+          this.spinning = false
+          this.feedback = error.response.data.message
+        })
+
+    },
+    editRegion() {
+      this.spinning_e = true
+      API.put(`api/organisation/v2/regions/${this.formEdit.code}`, this.formEdit)
+        .then(response => {
+          if (response.data.status === 0) {
+            notification.success({
+              message: 'Region edited successfully.'
+            })
+            this.show_modal_edit = false
+            this.spinning_e = false
+            this.getRegions()
+          }
+        })
+        .catch(error => {
+          this.spinning_e = false
+          this.feedback_two = error.response.data.message
+        })
+    },
   }
 }
 </script>
+
+<style scoped>
+.spin-content {
+  border: 1px solid #91d5ff;
+  background-color: #e6f7ff;
+  height: 300px;
+  padding: 30px;
+}
+
+.form-content span {
+  color: red;
+}
+</style>

@@ -129,6 +129,18 @@
               </div>
             </router-link>
           </div>
+          <div class="side-nav-item">
+            <router-link to="/system-configurations">
+              <div class="collapse-label">
+                <div class="item-icon">
+                  <img src="../../assets/icons/usermanagement.svg" alt="">
+                </div>
+                <div class="item-label" v-if="toggle">
+                  System Configurations
+                </div>
+              </div>
+            </router-link>
+          </div>
         </div>
       </div>
     </div>

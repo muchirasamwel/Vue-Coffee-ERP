@@ -93,7 +93,17 @@ const routes = [
         path: '/permissions/:id',
         name: 'permission details',
         component: () => import('../components/userManagement/permission/details')
-      }
+      },
+      {
+        path: '/system-configurations',
+        name: 'system-configurations',
+        component: () => import('../components/systemConfigurations/index')
+      },
+      {
+        path: '/regions',
+        name: 'regions',
+        component: () => import('../components/systemConfigurations/regions/index')
+      },
     ]
   }
 ]
