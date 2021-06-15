@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Main from '../components/layout/Main'
+import NProgress from "nprogress";
+import "nprogress/nprogress.css";
 
 Vue.use(VueRouter)
 
@@ -45,7 +47,7 @@ const routes = [
         component: () => import('../components/farmers/index')
       },
       {
-        path: '/farmers/:id',
+        path: '/farmer/:id',
         name: 'view Farmer',
         component: () => import('../components/farmers/viewFarmer')
       },
@@ -113,5 +115,16 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
+router.beforeResolve((to, from, next) => {
+  if (to.name) {
+    NProgress.start();
+  }
+  next();
+});
+
+router.afterEach((to, from) => {
+  NProgress.done();
+});
 
 export default router

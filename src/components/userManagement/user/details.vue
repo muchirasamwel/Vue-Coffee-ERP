@@ -15,7 +15,7 @@
       <div v-if="feedback !== ''">
         <a-alert
           message="Error"
-          description="This is an error message about copywriting."
+          description="This user cannot be fetched, an error occurred."
           type="error"
           show-icon
         />
@@ -255,11 +255,7 @@ export default {
     },
     getUser(id) {
       this.loading = true
-      API.get('api/usermanagement/v1/users', {
-        params: {
-          userId: id
-        }
-      })
+      API.get(`api/usermanagement/v1/users/${id}`)
         .then(response => {
           this.user = response.data
           this.loading = false

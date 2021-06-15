@@ -146,11 +146,7 @@ export default {
     },
     getRole(id) {
       this.loading = true
-      API.get('api/usermanagement/v1/userGroups', {
-        params: {
-          groupCode: id
-        }
-      })
+      API.get(`api/usermanagement/v1/userGroups/${id}`)
         .then(response => {
           this.role = response.data
           this.loading = false

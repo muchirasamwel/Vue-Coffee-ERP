@@ -15,6 +15,13 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
 }
+#nprogress .bar {
+  background: #1fd242 !important;
+  height: 4px !important;
+}
+#nprogress .spinner-icon{
+  border:  none !important
+}
 
 .icon {
   width: 24px;
