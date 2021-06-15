@@ -56,7 +56,6 @@
 
 <script>
 import { Icon, Alert, Input, notification } from 'ant-design-vue'
-import API from '../../api'
 import router from '../../router'
 import axios from 'axios'
 
@@ -95,11 +94,17 @@ export default {
       axios.post(process.env.VUE_APP_BASE_URL + 'api/usermanagement/token', {
         username: this.form.username,
         password: this.form.password
+      }, {
+        headers: {
+          'Access-Control-Allow-Origin': 'http://localhost:8080',
+          'Authorization': null,
+        }
       })
         .then(res => {
           this.isPassword = false
           this.isEmail = false
           if (res.data.status === 0) {
+            localStorage.api_token = res.data.token
             this.$store.commit('SET_LOGGEDINUSER', res.data)
             this.loading = false
             notification.success({
