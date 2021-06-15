@@ -5,6 +5,12 @@
       <router-link to="/regions" class="item">
         Regions
       </router-link>
+      <router-link to="/weighbridges" class="item">
+        Weighbridges
+      </router-link>
+      <router-link to="/branch-stores" class="item">
+        Branch Stores
+      </router-link>
     </div>
 
   </div>

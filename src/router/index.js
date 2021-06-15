@@ -102,10 +102,16 @@ const routes = [
         component: () => import('../components/systemConfigurations/index')
       },
       {
-        path: '/regions',
-        name: 'regions',
-        component: () => import('../components/systemConfigurations/regions/index')
+        path: '/branch-stores',
+        name: 'branch-stores',
+        component: () => import('../components/systemConfigurations/stores/index')
       },
+      {
+        path: '/weighbridges',
+        name: 'weighbridges',
+        component: () => import('../components/systemConfigurations/weighbridges/index')
+      },
+
     ]
   }
 ]
