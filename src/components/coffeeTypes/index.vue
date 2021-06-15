@@ -142,7 +142,7 @@ export default {
     addCoffeeType () {
       this.loading = true
       const payload = Object.assign({}, this.form)
-      API.post('', payload)
+      API.post('api/booking/v1/coffeeTypes', payload)
         .then(res => {
           if (res.data.status === 0) {
             notification.success({

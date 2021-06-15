@@ -2,7 +2,7 @@ import axios from 'axios'
 import https from 'https'
 
 axios.defaults.headers.common.Authorization = localStorage.getItem('api_token')
-axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*'
+axios.defaults.headers.common['Access-Control-Allow-Origin'] = 'http://localhost:8080'
 
 export const API = axios.create({
   httpsAgent: new https.Agent({
