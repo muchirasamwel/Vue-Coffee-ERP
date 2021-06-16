@@ -3,11 +3,8 @@
     <h3 class="tx-center" style="margin-top: 15px">User Management</h3>
     <p class="tx-center" style="margin-top: 15px"><b>Management Actions Available</b></p>
     <div class="user-management-page">
-      <router-link to="/departments" class="item">
-          Departments
-      </router-link>
-      <router-link to="/branches" class="item">
-          Branches
+      <router-link to="/users" class="item">
+        Users
       </router-link>
       <router-link to="/permissions" class="item">
           Permissions
@@ -16,11 +13,9 @@
           Roles
       </router-link>
     </div>
-    <div class="user-management-page" style="margin-top: 15px">
-      <router-link to="/users" class="item">
-          Users
-      </router-link>
-    </div>
+<!--    <div class="user-management-page" style="margin-top: 15px">-->
+<!--    -->
+<!--    </div>-->
 
   </div>
 </template>

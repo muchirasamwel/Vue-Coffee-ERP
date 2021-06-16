@@ -135,8 +135,7 @@
                 <div class="item-icon">
                   <img src="../../assets/icons/usermanagement.svg" alt="">
                 </div>
-                <div class="item-label" v-if="toggle">
-                  System Configurations
+                <div class="item-label" v-if="toggle">System
                 </div>
               </div>
             </router-link>

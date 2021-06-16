@@ -130,7 +130,7 @@
 <script>
 import responsiveMixin from '@/components/mixins/responsiveMixin'
 import vueTableMixin from '../../mixins/vuetable_mixin'
-import {Alert, Modal, Spin, notification, Skeleton, Collapse, Select} from 'ant-design-vue'
+import {Alert, Modal, Spin, notification, Skeleton, Collapse, Select, Tooltip} from 'ant-design-vue'
 import {API} from '../../../api'
 import {mapGetters} from "vuex";
 
@@ -143,6 +143,7 @@ export default {
     'a-alert': Alert,
     'a-spin': Spin,
     'a-select': Select,
+    'a-tooltip': Tooltip,
     'a-select-option': Select.Option
 
   },
@@ -211,7 +212,7 @@ export default {
       return this.form.branchCode !== '' && this.form.storeName !== ''
     },
     dataManager(sortOrder, pagination) {
-      if (this.strores.length < 1) return
+      if (this.stores.length < 1) return
       let local = this.stores
 
       if (sortOrder.length > 0) {
@@ -249,7 +250,6 @@ export default {
       this.storeDetails.storeName = data.storeName;
       this.storeDetails.branchCode = data.branchCode;
       this.storeDetails.storeId = data.storeId;
-      this.storeDetails.noOfTrees = data.noOfTrees;
       this.show_modal_more = true;
     },
     showEditModal(data) {
@@ -257,7 +257,6 @@ export default {
       this.formEdit.storeName = data.storeName;
       this.formEdit.branchCode = data.branchCode;
       this.formEdit.storeId = data.storeId;
-      this.formEdit.noOfTrees = data.noOfTrees;
     },
     showModal() {
       this.show_modal = true

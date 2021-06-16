@@ -57,16 +57,6 @@ const routes = [
         component: () => import('../components/userManagement/index')
       },
       {
-        path: '/branches',
-        name: 'branches',
-        component: () => import('../components/userManagement/branch/index')
-      },
-      {
-        path: '/departments',
-        name: 'departments',
-        component: () => import('../components/userManagement/department/Department')
-      },
-      {
         path: '/roles',
         name: 'roles',
         component: () => import('../components/userManagement/roles/Roles')
@@ -102,6 +92,16 @@ const routes = [
         component: () => import('../components/systemConfigurations/index')
       },
       {
+        path: '/branches',
+        name: 'branches',
+        component: () => import('../components/systemConfigurations/branch/index')
+      },
+      {
+        path: '/departments',
+        name: 'departments',
+        component: () => import('../components/systemConfigurations/department/Department')
+      },
+      {
         path: '/branch-stores',
         name: 'branch-stores',
         component: () => import('../components/systemConfigurations/stores/index')
@@ -110,6 +110,11 @@ const routes = [
         path: '/weighbridges',
         name: 'weighbridges',
         component: () => import('../components/systemConfigurations/weighbridges/index')
+      },
+      {
+        path: '/regions',
+        name: 'regions',
+        component: () => import('../components/systemConfigurations/regions/index')
       },
 
     ]

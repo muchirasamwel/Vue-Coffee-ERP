@@ -207,7 +207,7 @@ export default {
       }
     },
     getWeighBridge() {
-      API.get('api/weighbridge/v1/wighBridges')
+      API.get('api/weighbridge/v1/weighbridges')
         .then(response => {
           this.weighBridge = response.data
           this.loading = false;
@@ -232,7 +232,7 @@ export default {
     createWeighBridge() {
       this.feedback = '';
       this.spinning = true
-      API.post('api/weighbridge/v1/wighBridges', this.form)
+      API.post('api/weighbridge/v1/weighbridges', this.form)
         .then(response => {
           if (response.data.status === 0) {
             notification.success({
@@ -249,7 +249,7 @@ export default {
     },
     editWeighBridge() {
       this.spinning_e = true
-      API.put(`api/weighbridge/v1/wighBridges/${this.formEdit.code}`, this.formEdit)
+      API.put(`api/weighbridge/v1/weighbridges/${this.formEdit.code}`, this.formEdit)
         .then(response => {
           if (response.data.status === 0) {
             notification.success({
