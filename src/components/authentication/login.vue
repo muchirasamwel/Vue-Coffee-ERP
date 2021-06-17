@@ -106,6 +106,7 @@ export default {
             notification.success({
               message: 'Login successfully'
             })
+            localStorage.setItem('user', res.data)
             router.push({ name: 'dash' })
           }
         })
