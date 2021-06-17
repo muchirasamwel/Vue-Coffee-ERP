@@ -7,13 +7,15 @@
     <div class="login-details">
       <div class="left-items">
         <div class="details">
-          <div class="logo mt-5">
-            <img height="120" width="120" alt="Vue logo" src="../../assets/logo.png">
+          <div class="logo my-5">
+            <div>
+            <img height="120" width="120" style="border-radius: 15px" alt="Vue logo" src="../../assets/logo.png">
+            </div>
           </div>
           <div class="text-center desc">
             <div class="text-dec">
               <p><span class="h5">Welcome to Coffee ERP</span><br><br>
-                Track your coffee processing and sale in one place with ease.</p>
+                <span style="font-size: 14px">Track your coffee processing and sale in one place with ease.</span></p>
             </div>
           </div>
         </div>
@@ -35,17 +37,11 @@
           <a-input-password v-model="form.password" allow-clear placeholder="Input password"/>
           <span v-if="isPassword" class="text-danger">Please provide password</span>
         </div>
-        <div class="text-center font-bold">
-          <span>Forgot <router-link to="/home">account</router-link> ? </span>
+        <div class="login-section-btn">
+          <a-button @click="confirmLogin" type="primary" class="login-button" :loading="loading">Login</a-button>
         </div>
-        <div class="m-3">
-          <a-button @click="confirmLogin" type="primary" class="btn-block the-btn" :loading="loading">Login</a-button>
-        </div>
-        <div class="text-center mb-3" style="font-weight: bold">
-          <span>New member ? <router-link to="/">Create Account</router-link>. </span>
-        </div>
-        <div class="text-center font-italic">
-              <span>Facing sny issues using the system? <br>
+        <div class="text-center" >
+              <span style="font-size: 14px">Facing any issues using the system? <br>
                 Please reach out to us at erps@shamba.com<br>
               or<br>call +254712345678</span>
         </div>

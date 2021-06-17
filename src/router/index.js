@@ -29,7 +29,7 @@ const routes = [
       {
         path: '/cooperatives',
         name: 'cooperatives',
-        component: () => import('../components/cooperatives/index')
+        component: () => import('../components/cooperatives/main')
       },
       {
         path: '/booking',

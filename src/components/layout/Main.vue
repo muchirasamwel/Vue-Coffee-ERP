@@ -133,7 +133,7 @@
             <router-link to="/system-configurations">
               <div class="collapse-label">
                 <div class="item-icon">
-                  <img src="../../assets/icons/usermanagement.svg" alt="">
+                  <img src="../../assets/icons/sortex.svg" alt="">
                 </div>
                 <div class="item-label" v-if="toggle">System
                 </div>
