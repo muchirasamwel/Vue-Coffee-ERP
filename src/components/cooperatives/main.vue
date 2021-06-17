@@ -6,21 +6,21 @@
         <a-alert v-if="feedback !== ''" type="error" :message=feedback banner/>
       </div>
       <div class="form-content">
-          <label for="name">Name <span>*</span></label>
-          <input class="form-input" type="text" v-model="form.name" id="name">
-          <label for="registrationNo">Registration No <span>*</span> </label>
-          <input class="form-input" type="text" v-model="form.registrationNo" id="registrationNo">
-          <label for="pNo">Phone Number <span>*</span> </label>
-          <input class="form-input" type="number" v-model="form.phoneNo" id="pNo"
-                 placeholder="eg. 0712345678">
-          <label for="email">Email <span>*</span> </label>
-          <input class="form-input" type="email" v-model="form.email" id="email"
-                 placeholder="eg. example@email.com">
-          <label for="coopCode">Cooperative Code </label>
-          <input class="form-input" type="text" v-model="form.coopCode" id="coopCode">
+        <label for="name">Name <span>*</span></label>
+        <input class="form-input" type="text" v-model="form.name" id="name">
+        <label for="registrationNo">Registration No <span>*</span> </label>
+        <input class="form-input" type="text" v-model="form.registrationNo" id="registrationNo">
+        <label for="pNo">Phone Number <span>*</span> </label>
+        <input class="form-input" type="number" v-model="form.phoneNo" id="pNo"
+               placeholder="eg. 0712345678">
+        <label for="email">Email <span>*</span> </label>
+        <input class="form-input" type="email" v-model="form.email" id="email"
+               placeholder="eg. example@email.com">
+        <label for="coopCode">Cooperative Code </label>
+        <input class="form-input" type="text" v-model="form.coopCode" id="coopCode">
         <label for="address">Address</label>
         <input class="form-input" type="number" v-model="form.address" id="address">
-        </div>
+      </div>
       <template slot="footer">
         <a-button key="back" @click="show_modal = false">
           Cancel
@@ -58,7 +58,7 @@
         <label for="eemail">Email</label>
         <input class="form-input" type="email" v-model="formEdit.email" id="eemail"
                placeholder="eg. example@email.com">
-        <label for="ecoopCode">Cooperative Code </label>
+        <label for="ecoopCode">Cooperative Code</label>
         <input class="form-input" type="text" v-model="formEdit.coopCode" id="ecoopCode">
         <label for="eaddress">Address</label>
         <input class="form-input" type="number" v-model="formEdit.address" id="eaddress">
@@ -79,7 +79,8 @@
       <search-bar :search-label='"Search Cooperative ..."'></search-bar>
     </div>
     <div v-if="loading">
-      <a-skeleton active :paragraph="{ rows: 8, width: ['100%','100%','100%','100%','100%', '100%','100%','100%','100%'] }" />
+      <a-skeleton active
+                  :paragraph="{ rows: 8, width: ['100%','100%','100%','100%','100%', '100%','100%','100%','100%'] }"/>
     </div>
     <div v-else>
       <div>
@@ -97,7 +98,7 @@
             <a-button class="ant-btn ant-btn-sm mb-3" v-if="isSmallDevice" @click="showActions=!showActions">...
             </a-button>
             <div class="table-actions" v-if="!isSmallDevice || showActions">
-              <label class="action-btns" @click="viewCooperative(props.rowData.id)">
+              <label class="action-btns" @click="viewCooperative(props.rowData.coopCode)">
                 <img src="../../assets/icons/view.svg" alt="" width="30px">
               </label>
               <label class="action-btns" @click="showEditModal(props.rowData)">
@@ -131,9 +132,9 @@
 <script>
 import responsiveMixin from '@/components/mixins/responsiveMixin'
 import vueTableMixin from '../mixins/vuetable_mixin'
-import {Alert, Modal, Spin, notification, Tooltip, Skeleton} from 'ant-design-vue'
-import {API} from '../../api'
-import router from "../../router";
+import { Alert, Modal, Spin, notification, Tooltip, Skeleton } from 'ant-design-vue'
+import { API } from '../../api'
+import router from '../../router'
 
 export default {
   mixins: [vueTableMixin, responsiveMixin],
@@ -145,7 +146,7 @@ export default {
     'a-tooltip': Tooltip,
     'a-skeleton': Skeleton,
   },
-  data() {
+  data () {
     return {
       loading: true,
       loading_e: false,
@@ -155,17 +156,44 @@ export default {
       showActions: false,
       cooperatives: [],
       form: {
-        name: '', email: '', phoneNo: '', registrationNo: ''
+        name: '',
+        email: '',
+        phoneNo: '',
+        registrationNo: ''
       },
       fields: [
-        {name: 'id', title: 'Id'},
-        {name: 'coopCode', title: 'Cooperative Code'},
-        {name: 'name', title: 'Name'},
-        {name: 'email', title: 'Email'},
-        {name: '__slot:phone', title: 'Phone No'},
-        {name: 'registrationNo', title: 'Registration No'},
-        {name: 'noOfFarmers', title: 'No of Farmers'},
-        {name: '__slot:action', title: 'Action'}
+        {
+          name: 'id',
+          title: 'Id'
+        },
+        {
+          name: 'coopCode',
+          title: 'Cooperative Code'
+        },
+        {
+          name: 'name',
+          title: 'Name'
+        },
+        {
+          name: 'email',
+          title: 'Email'
+        },
+        {
+          name: '__slot:phone',
+          title: 'Phone No'
+        },
+        {
+          name: 'registrationNo',
+          title: 'Registration No'
+        },
+        {
+          name: 'noOfFarmers',
+          title: 'No of Farmers'
+        },
+        {
+          name: '__slot:action',
+          title: 'Action'
+        }
       ],
       formEdit: {},
       show_modal_edit: false,
@@ -177,22 +205,22 @@ export default {
   },
 
   computed: {
-    canAddCooperative() {
+    canAddCooperative () {
       return this.confirmAddCooperative()
     }
   },
-  mounted() {
+  mounted () {
     this.itemsPerPage = 5
   },
-  created() {
-    this.getCooperatives();
+  created () {
+    this.getCooperatives()
   },
   methods: {
-    confirmAddCooperative() {
+    confirmAddCooperative () {
       return this.form.name !== '' && this.form.phoneNo !== '' &&
         this.form.email !== '' && this.form.registrationNo !== ''
     },
-    dataManager(sortOrder, pagination) {
+    dataManager (sortOrder, pagination) {
       if (this.cooperatives.length < 1) return
       let local = this.cooperatives
 
@@ -217,17 +245,17 @@ export default {
         data: _.slice(local, from, to)
       }
     },
-    getCooperatives() {
+    getCooperatives () {
       API.get('api/organisation/cooperatives')
         .then(response => {
           this.cooperatives = response.data
-          this.loading = false;
+          this.loading = false
         })
         .catch(e => {
-          this.loading = false;
+          this.loading = false
         })
     },
-    showEditModal(data) {
+    showEditModal (data) {
       this.show_modal_edit = true
       this.formEdit = {
         id: data.id,
@@ -237,13 +265,13 @@ export default {
         coopCode: data.coopCode,
         registrationNo: data.registrationNo,
         address: data.address,
-      };
+      }
     },
-    showModal() {
+    showModal () {
       this.show_modal = true
     },
-    createCooperative() {
-      this.feedback = '';
+    createCooperative () {
+      this.feedback = ''
       this.loading_a = true
       API.post('api/organisation/cooperatives', this.form)
         .then(response => {
@@ -262,7 +290,7 @@ export default {
         })
 
     },
-    editCooperative() {
+    editCooperative () {
       this.loading_e = true
       API.put(`api/organisation/cooperatives/${this.formEdit.id}`, this.formEdit)
         .then(response => {
@@ -280,8 +308,8 @@ export default {
           this.feedback_two = error.response.data.message
         })
     },
-    viewCooperative(id){
-      router.push('/cooperatives/' + id)
+    viewCooperative (coopCode) {
+      router.push('/cooperatives/' + coopCode)
     }
   }
 }

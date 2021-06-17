@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Main from '../components/layout/Main'
-import NProgress from "nprogress";
-import "nprogress/nprogress.css";
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
 
 Vue.use(VueRouter)
 
@@ -37,9 +37,10 @@ const routes = [
         component: () => import('../components/booking/index')
       },
       {
-        path: '/cooperatives/:id',
+        path: '/cooperatives/:coopCode',
         name: 'view Cooperative',
-        component: () => import('../components/cooperatives/viewCooperative')
+        component: () => import('../components/cooperatives/viewCooperative'),
+        props: true
       },
       {
         path: '/farmers',
@@ -129,13 +130,13 @@ const router = new VueRouter({
 
 router.beforeResolve((to, from, next) => {
   if (to.name) {
-    NProgress.start();
+    NProgress.start()
   }
-  next();
-});
+  next()
+})
 
 router.afterEach((to, from) => {
-  NProgress.done();
-});
+  NProgress.done()
+})
 
 export default router
