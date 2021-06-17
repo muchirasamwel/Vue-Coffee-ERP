@@ -1,58 +1,65 @@
-<template>
+<template xmlns="http://www.w3.org/1999/html">
   <div>
     <!--add-->
-    <a-modal v-model="show_modal" centered width="900px" title="Add User" on-ok="createDepartment">
-      <div class="row">
+    <a-modal v-model="show_modal" centered width="950px" title="Add User" on-ok="createUser">
+      <div>
+        <a-alert v-if="feedback !== ''" type="error" :message=feedback banner/>
+      </div>
+      <div class="row form-content">
         <div class="col-md-4">
-          <div>
-            <label for="f-name">First Name</label>
-            <input class="form-input" type="text" v-model="form.firstName" id="f-name">
-          </div>
-          <div>
-            <label for="m-name">Middle Name</label>
-            <input class="form-input" type="text" v-model="form.middleName" id="m-name">
-          </div>
-          <div>
-            <label for="l-name">Last Name</label>
-            <input class="form-input" type="text" v-model="form.flastName" id="l-name">
-          </div>
+          <label for="f-name">First Name <span>*</span></label>
+          <input class="form-input" type="text" v-model="form.firstName" id="f-name">
+          <label for="m-name">Middle Name</label>
+          <input class="form-input" type="text" v-model="form.middleName" id="m-name">
+          <label for="l-name">Last Name <span>*</span></label>
+          <input class="form-input" type="text" v-model="form.lastName" id="l-name">
+          <label for="idn">ID Number <span>*</span></label>
+          <input class="form-input" type="number" v-model="form.IDNumber" id="idn">
+          <label for="pn">Phone Number <span>*</span></label>
+          <input class="form-input" type="number" v-model="form.phoneNo" id="pn">
         </div>
         <div class="col-md-4">
-          <div>
-            <label for="id-name">ID Number</label>
-            <input class="form-input" type="text" v-model="form.IDNumber" id="id-name">
-          </div>
-          <div>
-            <label for="ph-name">Phone No</label>
-            <input class="form-input" type="text" v-model="form.phoneNo" id="ph-name">
-          </div>
-          <div>
-            <label for="email">Email</label>
-            <input class="form-input" type="text" v-model="form.email" id="email">
-          </div>
+          <label for="email">Email</label>
+          <input class="form-input" type="text" v-model="form.email" id="email">
+          <label for="address">Address</label>
+          <input class="form-input" type="text" v-model="form.address" id="address">
+          <label>Branch Code</label>
+          <a-select v-model="form.branchCode" style="width: 100%; margin-bottom: 10px">
+            <a-select-option v-for="branch in branches" :key="branch.branchCode">
+              {{ branch.branchName }}
+            </a-select-option>
+          </a-select>
+          <label>Department Code</label>
+          <a-select v-model="form.deptCode" style="width: 100%; margin-bottom: 10px">
+            <a-select-option v-for="dept in departments" :key="dept.deptCode">
+              {{ dept.deptName }}
+            </a-select-option>
+          </a-select>
+          <label>Password <span>*</span></label>
+          <a-input-password v-model="form.password" allow-clear placeholder="Enter password"/>
         </div>
         <div class="col-md-4">
-          <div>
-            <label for="address">Address</label>
-            <input class="form-input" type="text" v-model="form.address" id="address">
-          </div>
-          <div>
-            <label for="l-name">Branch Code</label>
-            <select v-model="form.branchCode" class="form-input">
-              <option value="null" selected>All Branches</option>
-              <option v-for="branch in branches" :value="branch.branchCode" :key="branch.branchCode">
-                {{ branch.branchName }}
-              </option>
-            </select>
-          </div>
-          <div>
-            <label>Department Code</label>
-            <select v-model="form.deptCode" class="form-input">
-              <option value="null" selected>All Departments</option>
-              <option v-for="dept in departments"  :key="dept.deptCode">
-                {{ dept.deptName }}
-              </option>
-            </select>
+          <label>Select User Group</label>
+          <a-select @change="handleRoles" style="width: 100%; margin-bottom: 10px">
+            <a-select-option v-for="role in roles" :key="role.groupCode">
+              {{ role.groupName }}
+            </a-select-option>
+          </a-select>
+          <p><b>Selected user groups</b></p>
+          <div class="custom-container">
+            <div v-if="selectedRoles.length === 0" class="item-container my-2">
+              <div>
+                No user group selected
+              </div>
+            </div>
+            <div v-else v-for="item in selectedRoles" class="item-container my-2">
+              <div>
+                {{ item.groupName }}
+              </div>
+              <div class="item-icon pointer-hand" @click="removeRoleFromList(item)">
+                <img src="../../../assets/icons/delete.svg" alt="" width="20px">
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -60,82 +67,101 @@
         <a-button key="back" @click="handleCancel('add')">
           Cancel
         </a-button>
-        <a-button key="submit" type="primary" :loading="loading" @click="createCooperative">
+        <a-tooltip v-if="!canAddUser" placement="leftTop">
+          <template slot="title">
+            <span>Fill all required fields</span>
+          </template>
+          <a-button key="submit" type="primary" style="margin-left: 10px" :disabled="true">
+            Add User
+          </a-button>
+        </a-tooltip>
+        <a-button key="submit" type="primary" v-if="canAddUser" :loading="addingUsers" @click="createUser">
           Add User
         </a-button>
       </template>
     </a-modal>
     <!--    add-->
+
     <!--    edit user-->
     <a-modal v-model="show_modal_edit" centered width="900px" title="Edit User"
              on-ok="createDepartment">
+      <div>
+        <a-alert v-if="feedback_two !== ''" type="error" :message=feedback_two banner/>
+      </div>
       <div class="row">
         <div class="col-md-4">
-          <div>
-            <label for="e-f-name">First Name</label>
-            <input class="form-input" type="text" v-model="formEdit.firstName" id="e-f-name">
-          </div>
-          <div>
-            <label for="e-m-name">Middle Name</label>
-            <input class="form-input" type="text" v-model="formEdit.middleName" id="e-m-name">
-          </div>
-          <div>
-            <label for="e-l-name">Last Name</label>
-            <input class="form-input" type="text" v-model="formEdit.lastName" id="e-l-name">
-          </div>
+          <label for="ef-name">First Name</label>
+          <input class="form-input" type="text" v-model="formEdit.firstName" id="ef-name">
+          <label for="em-name">Middle Name</label>
+          <input class="form-input" type="text" v-model="formEdit.middleName" id="em-name">
+          <label for="el-name">Last Name </label>
+          <input class="form-input" type="text" v-model="formEdit.lastName" id="el-name">
+          <label for="eidn">ID Number </label>
+          <input class="form-input" type="number" v-model="formEdit.IDNumber" id="eidn">
+          <label for="epn">Phone Number </label>
+          <input class="form-input" type="number" v-model="formEdit.phoneNo" id="epn">
         </div>
         <div class="col-md-4">
-          <div>
-            <label for="e-id-name">ID Number</label>
-            <input class="form-input" type="text" v-model="formEdit.IDNumber" id="e-id-name">
-          </div>
-          <div>
-            <label for="e-ph-name">Phone No</label>
-            <input class="form-input" type="text" v-model="formEdit.phoneNo" id="e-ph-name">
-          </div>
-          <div>
-            <label for="e-email">Email</label>
-            <input class="form-input" type="text" v-model="formEdit.email" id="e-email">
-          </div>
+          <label for="eemail">Email</label>
+          <input class="form-input" type="text" v-model="formEdit.email" id="eemail">
+          <label for="eaddress">Address</label>
+          <input class="form-input" type="text" v-model="formEdit.address" id="eaddress">
+          <label>Branch Code</label>
+          <a-select v-model="formEdit.branchCode" style="width: 100%; margin-bottom: 10px">
+            <a-select-option v-for="branch in branches" :key="branch.branchCode">
+              {{ branch.branchName }}
+            </a-select-option>
+          </a-select>
+          <label>Department Code</label>
+          <a-select v-model="formEdit.deptCode" style="width: 100%; margin-bottom: 10px">
+            <a-select-option v-for="dept in departments" :key="dept.deptCode">
+              {{ dept.deptName }}
+            </a-select-option>
+          </a-select>
+          <label>Select User Group</label>
+          <a-select @change="handleUserRoles" style="width: 100%; margin-bottom: 10px">
+            <a-select-option v-for="role in userRolesData" :key="role.groupCode">
+              {{ role.groupName }}
+            </a-select-option>
+          </a-select>
         </div>
         <div class="col-md-4">
-          <div>
-            <label for="e-address">Address</label>
-            <input class="form-input" type="text" v-model="formEdit.address" id="e-address">
-          </div>
-          <div>
-            <label>Branch Code</label>
-            <select v-model="formEdit.branchCode" class="form-input">
-              <option value="null" selected>All Branches</option>
-              <option v-for="branch in branches"  :key="branch.branchCode">
-                {{ branch.branchName }}
-              </option>
-            </select>
-          </div>
-          <div>
-            <label>Department Code</label>
-            <select v-model="formEdit.deptCode" class="form-input">
-              <option value="null" selected>All Departments</option>
-              <option v-for="dept in departments"  :key="dept.deptCode">
-                {{ dept.deptName }}
-              </option>
-            </select>
+          <p><b>Selected user groups</b></p>
+          <div class="custom-container">
+            <div v-if="userRoles.length === 0" class="item-container my-2">
+              <div>
+                No user group selected
+              </div>
+            </div>
+            <div v-else v-for="item in userRoles" class="item-container my-2">
+              <div>
+                {{ item.groupName }}
+              </div>
+              <div class="item-icon pointer-hand" @click="removeUserRoleFromList(item)">
+                <img src="../../../assets/icons/delete.svg" alt="" width="20px">
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <!--      <div>-->
-      <!--        <label for="e-pass">Password</label>-->
-      <!--        <input class="form-input" type="password" v-model="formEdit.password" id="e-pass">-->
-      <!--      </div>-->
       <template slot="footer">
         <a-button key="back" @click="handleCancel('edit')">
           Cancel
         </a-button>
-        <a-button key="submit" type="primary" :loading="loading" @click="createCooperative">
+        <a-tooltip v-if="!canEditUser" placement="leftTop">
+          <template slot="title">
+            <span>Fill all required fields</span>
+          </template>
+          <a-button key="submit" type="primary" style="margin-left: 10px" :disabled="true">
+            Edit User
+          </a-button>
+        </a-tooltip>
+        <a-button key="submit" type="primary" v-if="canEditUser" :loading="edit_loading" @click="editUser">
           Edit User
         </a-button>
       </template>
     </a-modal>
+
     <!--    edit user-->
     <h3 class="tx-center">Users</h3>
     <div style="display: flex; justify-content: space-between; margin-bottom: 20px">
@@ -146,7 +172,7 @@
       <search-bar :search-label='"Search User ..."'></search-bar>
     </div>
     <div>
-      <div v-if="loading">
+      <div v-if="fetchingUsers">
         <a-spin tip="Fetching users...">
           <div class="spin-content">
           </div>
@@ -210,7 +236,7 @@
 
 <script>
 import vueTableMixin from '../../mixins/vuetable_mixin'
-import {Modal, Icon, notification, Alert, Tag, Spin} from 'ant-design-vue'
+import {Modal, Icon, notification, Alert, Tag, Spin, Select, Tooltip, Input} from 'ant-design-vue'
 import responsiveMixin from '@/components/mixins/responsiveMixin'
 import router from '../../../router'
 import {API} from "../../../api";
@@ -224,7 +250,11 @@ export default {
     'a-modal': Modal,
     'a-alert': Alert,
     'a-spin': Spin,
-    'a-tag': Tag
+    'a-tag': Tag,
+    'a-select': Select,
+    'a-tooltip': Tooltip,
+    'a-select-option': Select.Option,
+    'a-input-password': Input.Password
   },
   data() {
     return {
@@ -240,18 +270,31 @@ export default {
       ],
       edit_loading: false,
       loading: true,
-      spinning: false,
-      spinning_e: false,
-      form: {},
+      addingUsers: false,
+      fetchingUsers: false,
+      form: {
+        phoneNo: '', firstName: '', lastName: '', IDNumber: '', password: ''
+      },
       formEdit: {},
-      visible: false,
       show_modal_edit: false,
       show_modal: false,
       users: [],
-      itemsPerPage: 0
+      selectedRoles: [],
+      userRoles: [],
+      userRolesData: [],
+      itemsPerPage: 0,
+      roles: [],
+      feedback: '',
+      feedback_two: ''
     }
   },
   computed: {
+    canAddUser() {
+      return this.confirmAddUser()
+    },
+    canEditUser() {
+      return this.confirmEditUser()
+    },
     ...mapGetters({
       branches: 'branches',
       departments: 'departments'
@@ -259,6 +302,7 @@ export default {
   },
   mounted() {
     this.itemsPerPage = 10
+    this.getRoles()
   },
   created() {
     if (this.branches.length === 0) {
@@ -270,14 +314,56 @@ export default {
     this.getUsers();
   },
   methods: {
+    confirmEditUser() {
+      return this.formEdit.phoneNo !== '' && this.formEdit.firstName !== '' &&
+        this.formEdit.lastName !== '' && this.formEdit.IDNumber !== '' &&
+        this.formEdit.password !== '' && this.userRoles.length !== 0
+    },
+    confirmAddUser() {
+      return this.form.phoneNo !== '' && this.form.firstName !== '' &&
+        this.form.lastName !== '' && this.form.IDNumber !== '' &&
+        this.form.password !== '' && this.selectedRoles.length !== 0
+    },
+    removeUserRoleFromList(role) {
+      let data = this.userRoles;
+      _.remove(data, {groupCode: role.groupCode})
+      this.userRolesData.push(role)
+    },
+    handleUserRoles(value) {
+      let data = this.userRolesData;
+      let role = _.find(data, {groupCode: value});
+      this.userRoles.push(role);
+      _.remove(data, {groupCode: value})
+    },
+    removeRoleFromList(role) {
+      let data = this.selectedRoles;
+      _.remove(data, {groupCode: role.groupCode})
+      this.roles.push(role)
+    },
+    handleRoles(value) {
+      let data = this.roles;
+      let role = _.find(data, {groupCode: value});
+      this.selectedRoles.push(role);
+      _.remove(data, {groupCode: value})
+    },
+    getRoles() {
+      API.get('api/usermanagement/v1/userGroups')
+        .then(response => {
+          this.roles = response.data
+        })
+        .catch(e => {
+          console.log(e)
+        })
+    },
     getUsers() {
+      this.fetchingUsers = true
       API.get('api/usermanagement/v1/users')
         .then(response => {
           this.users = response.data.content
-          this.loading = false;
+          this.fetchingUsers = false;
         })
         .catch(e => {
-          this.loading = false;
+          this.fetchingUsers = false;
           console.log(e)
         })
     },
@@ -310,6 +396,9 @@ export default {
       router.push('/users/' + id)
     },
     showEditModal(data) {
+      this.userRoles = data.userGroups;
+      this.userRolesData = _.differenceBy(this.roles, this.userRoles, 'groupCode')
+      this.formEdit.userId = data.userId
       this.formEdit.firstName = data.firstName
       this.formEdit.lastName = data.lastName
       this.formEdit.middleName = data.middleName
@@ -332,29 +421,69 @@ export default {
         this.show_modal = false
       }
     },
-    createCooperative() {
-      this.loading = true
-      this.show_modal = false
+    createUser() {
+      this.addingUsers = true
+      let arr = [];
+      let len = this.selectedRoles.length;
+      for (let i = 0; i < len; i++) {
+        arr.push({
+          groupCode: this.selectedRoles[i].groupCode,
+        });
+      }
+      this.form.userGroups = []
+      for (let i = 0; i < arr.length; i++) {
+        this.form.userGroups[i] = arr[i];
+      }
+      API.post('api/usermanagement/v1/users', this.form)
+        .then(response => {
+          if (response.data.status === 0) {
+            notification.success({
+              message: 'User created successfully.'
+            })
+          }
+          this.addingUsers = false
+          this.show_modal = false
+        })
+        .catch(error => {
+          console.log(error.response)
+          this.addingUsers = false
+          this.feedback = error.response.data.message
+          this.show_modal = false
+        })
+
     },
-    editDepartment() {
+    editUser() {
       this.edit_loading = true
-      this.show_modal_edit = false
-    },
-    showDeleteConfirm(id) {
-      this.$confirm({
-        title: 'Are you sure delete this User?',
-        okText: 'Yes',
-        okType: 'danger',
-        cancelText: 'No',
-        onOk() {
-          notification.success({
-            message: id + 'User deleted successfully'
+      let arr = [];
+      let len = this.userRoles.length;
+      for (let i = 0; i < len; i++) {
+        arr.push({
+          groupCode: this.userRoles[i].groupCode,
+        });
+      }
+      this.formEdit.userGroups = []
+      for (let i = 0; i < arr.length; i++) {
+        this.formEdit.userGroups[i] = arr[i];
+      }
+      if (this.canEditUser) {
+        API.put(`api/usermanagement/v1/users/${this.formEdit.userId}`, this.formEdit)
+          .then(response => {
+            if (response.data.status === 0) {
+              notification.success({
+                message: 'User edited successfully.'
+              })
+              this.show_modal_edit = false
+              this.edit_loading = false
+            }
           })
-        },
-        onCancel() {
-        }
-      })
-    }
+          .catch(error => {
+            this.edit_loading = false
+            this.feedback_two = error.response.data.message
+          })
+      } else {
+        this.feedback_two = "Fill all the required fields"
+      }
+    },
   }
 }
 </script>
@@ -365,4 +494,9 @@ export default {
   height: 300px;
   padding: 30px;
 }
+
+.form-content span {
+  color: red;
+}
 </style>
+
