@@ -85,8 +85,6 @@
 
 
 .view-item-body
-  border-radius: 10px
-  border: 1px solid $hover-color
   padding: 10px
   overflow-x: auto
 
@@ -128,16 +126,27 @@
 
 .first-dash
   display: flex
-  justify-content: space-between
+  justify-content: space-around
 
   .mini-card
+    .stats
+      font-weight: bold
+      font-size: 18px
+
+    .item-icon
+      padding-right: 15px
+
+    p
+      margin-bottom: 10px !important
     @include shadow
     cursor: pointer
-    padding: 10px
-    width: 16%
+    padding: 20px
+    width: 20%
     border-radius: 10px
     height: 100px
-    @include center-hor-ver
+    display: flex
+    justify-content: flex-start
+    align-items: center
 
 .item-body
   border-radius: 10px
@@ -154,9 +163,11 @@
   transform: translate(-50%, -50%)
   width: 60%
   padding: 10px
+
   .login-section-btn
     @include center-hor-ver
     margin-bottom: 40px
+
     .login-button
       width: 179px
 
@@ -193,14 +204,18 @@
     .right-items
       padding: 10px
       width: 50%
+
 .user-management-page
   display: flex
   justify-content: space-between
+
   a
     text-decoration: none
     color: black
+
   a:hover
     text-decoration: none
+
   .item
     width: 24.5%
     height: 100px
@@ -210,6 +225,7 @@
     font-weight: bold
     font-size: 20px
     margin-bottom: 10px
+
 @media only screen and (min-width: 450px)
   .login
     .login-details
@@ -219,6 +235,7 @@
 @media only screen and (max-width: 450px)
   .user-management-page
     display: block
+
     .item
       width: 100%
       height: 100px
@@ -259,3 +276,11 @@
 
 button:disabled
   background-color: $hover-color !important
+
+.page-title
+  display: flex
+  justify-content: space-between
+  width: 100%
+
+.form-group
+  margin-bottom: 8px !important
