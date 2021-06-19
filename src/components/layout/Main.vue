@@ -36,7 +36,7 @@
           </a-popover>
         </div>
       </div>
-      <hr>
+<!--      <hr>-->
     </div>
     <div id="mySidenav" class="sidenav">
       <div class="side-top">
@@ -66,7 +66,7 @@
           </div>
         </div>
       </div>
-      <div class="content-body">
+      <div class="content-body" :class="{'border-80':toggle}">
         <div id="content-wrap" class="content-wrap">
           <div class="side-nav-item active">
             <router-link to="/dash">
@@ -212,7 +212,7 @@ export default {
       } else {
         if (this.screenWidth > 450) {
           document.getElementById('main').style.marginLeft = '55px'
-          document.getElementById('mySidenav').style.width = '55px'
+          document.getElementById('mySidenav').style.width = '60px'
         } else {
           document.getElementById('main').style.marginLeft = '0px'
           document.getElementById('mySidenav').style.width = '0px'
