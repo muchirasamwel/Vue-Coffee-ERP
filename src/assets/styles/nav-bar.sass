@@ -5,14 +5,17 @@
 
 .active
   border-left: 10px solid $color-orange
+
 .active, .side-nav-item:hover
-  background-color: $background-color
+  //background-color: $background-color
+  .collapse-label
+    font-weight: bold
 
   .item-icon
     color: black
 
   .item-label
-    color: black
+    color: white
 
 .sidenav
   width: 55px
@@ -96,7 +99,6 @@
           padding: 10px 5px
           align-items: center
           color: $link-color
-          font-weight: bold
           cursor: pointer
 
           .item-icon
@@ -104,6 +106,7 @@
             height: 30px
             @include center-hor-ver
             margin-right: 10px
+
             img
               height: 30px
               width: 30px

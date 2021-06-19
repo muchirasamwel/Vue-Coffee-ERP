@@ -118,16 +118,26 @@
             </router-link>
           </div>
           <div class="side-nav-item">
-            <router-link to="/user-management">
-              <div class="collapse-label">
-                <div class="item-icon">
-                  <img src="../../assets/icons/usermanagement.svg" alt="">
+            <div class="tab">
+              <input type="checkbox" id="user">
+              <label class="tab-label" for="user">
+                <div class="collapse-label">
+                  <div class="item-icon">
+                    <img src="../../assets/icons/usermanagement.svg" alt="">
+                  </div>
+                  <div class="item-label" v-if="toggle">
+                    User Management
+                  </div>
                 </div>
-                <div class="item-label" v-if="toggle">
-                  User Management
-                </div>
+              </label>
+              <div class="tab-content">
+                <router-link to="/users"><p>Users</p></router-link>
+                <router-link to="/departments"><p>Departments</p></router-link>
+                <router-link to="/branches"><p>Branches</p></router-link>
+                <router-link to="/permissions"><p>Permissions</p></router-link>
+                <router-link to="/roles"><p>User Groups</p></router-link>
               </div>
-            </router-link>
+            </div>
           </div>
           <div class="side-nav-item">
             <router-link to="/system-configurations">
