@@ -24,8 +24,7 @@
               </a-tooltip>
             </div>
           </router-link>
-          <!--          replace with user(logged in user) details-->
-          <a-popover :title=loggedInUser placement="bottomRight" trigger="click">
+          <a-popover title="cetric"  placement="bottomRight" trigger="click">
             <template slot="content">
               <p>My Profile</p>
               <p>Settings</p>

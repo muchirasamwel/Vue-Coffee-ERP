@@ -2,65 +2,95 @@
   <div>
     <!--add-->
     <a-modal v-model="show_modal" centered title="Add Booking" width="700px">
-      <div class="row">
+      <div class="row form-content">
         <div class="col-md-6">
-          <label>Booking Slip No</label>
-          <input class="form-input" type="text" v-model="form.bookingSlipNo">
-
-          <label>Grower Category</label>
-          <select v-model="form.growerCategory" class="form-input">
-            <option value="FARMER">Farmer</option>
-            <option value="COOPERATIVE">Cooperative</option>
-          </select>
-
-          <label>Grower Code</label>
-          <input class="form-input" type="text" v-model="form.growerCode">
-
-          <label>Earliest Expected Date</label>
-          <input class="form-input" type="date" v-model="form.earliestExpectedDate">
-
-          <label>Lastest Expected Date</label>
-          <input class="form-input" type="date" v-model="form.lastestExpectedDate">
-
-          <label>Delivery Mode</label>
-          <select v-model="form.deliveryMode" class="form-input">
-            <option value="ROAD">Road</option>
-            <option value="RAIL">Rail</option>
-            <option value="OTHER">Other</option>
-          </select>
-
-          <label>Delivery Description</label>
-          <textarea cols="10" rows="5" class="form-input" v-model="form.deliveryDescription">
+          <div class="form-group">
+            <label>Booking Slip No <span>*</span></label>
+            <input class="form-input" type="text" v-model="form.bookingSlipNo">
+            <span v-if="formError.bookingSlipNo" class="mb-2">
+            {{ formError.bookingSlipNo }}
+          </span>
+          </div>
+          <div class="form-group">
+            <label>Grower Category <span>*</span></label>
+            <select v-model="form.growerCategory" class="form-input">
+              <option value="FARMER">Farmer</option>
+              <option value="COOPERATIVE">Cooperative</option>
+            </select>
+            <span v-if="formError.growerCategory" class="mb-2">
+            {{ formError.growerCategory }}
+          </span>
+          </div>
+          <div class="form-group">
+            <label>Grower Code <span>*</span></label>
+            <input class="form-input" type="text" v-model="form.growerCode">
+            <span v-if="formError.growerCode" class="mb-2">
+            {{ formError.growerCode }}
+          </span>
+          </div>
+          <div class="form-group">
+            <label>Earliest Expected Date <span>*</span></label>
+            <input class="form-input" type="date" v-model="form.earliestExpectedDate">
+            <span v-if="formError.earliestExpectedDate" class="mb-2">
+            {{ formError.earliestExpectedDate }}
+          </span>
+          </div>
+          <div class="form-group">
+            <label>Lastest Expected Date <span>*</span></label>
+            <input class="form-input" type="date" v-model="form.lastestExpectedDate">
+            <span v-if="formError.lastestExpectedDate" class="mb-2">
+            {{ formError.lastestExpectedDate }}
+          </span>
+          </div>
+          <div class="form-group">
+            <label>Delivery Mode</label>
+            <select v-model="form.deliveryMode" class="form-input">
+              <option value="ROAD">Road</option>
+              <option value="RAIL">Rail</option>
+              <option value="OTHER">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Delivery Description</label>
+            <textarea cols="10" rows="5" class="form-input" v-model="form.deliveryDescription">
           </textarea>
-
+          </div>
         </div>
         <div class="col-md-6">
-          <label>Receiving Branch</label>
-          <select v-model="form.receivingBranchCode" class="form-input">
-            <option v-for="branch in branches" :value="branch.branchCode" :key="branch.branchCode">
-              {{ branch.branchName }}
-            </option>
-          </select>
-          <h6 class="text-center mb-2">Quantity</h6>
+          <div class="form-group">
+            <label>Receiving Branch <span>*</span></label>
+            <select v-model="form.receivingBranchCode" class="form-input">
+              <option v-for="branch in branches" :value="branch.branchCode" :key="branch.branchCode">
+                {{ branch.branchName }}
+              </option>
+            </select>
+            <span v-if="formError.receivingBranchCode" class="mb-2">
+            {{ formError.receivingBranchCode }}
+          </span>
+          </div>
+          <div>
+            <h6 class="text-center mb-2">Quantity <span>*</span></h6>
+            <label>Coffee Type</label>
+            <select v-model="coffee.type" class="form-input">
+              <option v-for="type in coffeeTypes" :value="type.coffeeType" :key="type.coffeeType">
+                {{ type.coffeeType }}
+              </option>
+            </select>
 
-          <label>Coffee Type</label>
-          <select v-model="coffee.type" class="form-input">
-            <option v-for="type in coffeeTypes" :value="type.coffeeType" :key="type.coffeeType">
-              {{ type.coffeeType }}
-            </option>
-          </select>
-
-          <label>No. of Bags</label>
-          <input class="form-input" type="text" v-model="coffee.bags">
-          <div class="row d-flex justify-content-end m-2">
-            <a-button type="primary" class="float-right" :disabled="!canAddCoffee" @click="addCoffee" :small="true">
-              Add Coffee
-            </a-button>
+            <label>No. of Bags</label>
+            <input class="form-input" type="text" v-model="coffee.bags">
+            <div class="row d-flex justify-content-end m-2">
+              <a-button type="primary" class="float-right" :disabled="!canAddCoffee" @click="addCoffee" :small="true">
+                Add Coffee
+              </a-button>
+            </div>
           </div>
           <div class="my-3">
             <custom-container :type="'coffee-container'" :units="'bags'" @delete="deleteCoffee"></custom-container>
           </div>
-
+          <span v-if="formError.expectedQuantity" class="mb-2">
+            {{ formError.expectedQuantity }}
+          </span>
         </div>
       </div>
 
@@ -68,7 +98,7 @@
         <a-button key="back" @click="handleCancel('add')">
           Cancel
         </a-button>
-        <a-button key="submit" type="primary" :loading="loading" @click="createBooking">
+        <a-button key="submit" type="primary" :loading="loading" @click="createBooking" :disabled="!canSave">
           Add Cooperative
         </a-button>
       </template>
@@ -77,67 +107,98 @@
 
     <!--edit-->
     <a-modal v-model="show_modal_edit" centered title="Edit Booking" width="700px" v-if="show_modal_edit">
-      <div class="row">
+      <div class="row form-content">
         <div class="col-md-6">
-          <label>Booking Slip No</label>
-          <input class="form-input" type="text" v-model="selectedBooking.bookingSlipNo">
-
-          <label for="growerCategory">Grower Category</label>
-          <select id="growerCategory" v-model="selectedBooking.growerCategory" class="form-input">
-            <option value="FARMER">Farmer</option>
-            <option value="COOPERATIVE">Cooperative</option>
-          </select>
-
-          <label>Grower Code</label>
-          <input class="form-input" type="text" v-model="selectedBooking.growerCode">
-
-          <label>Earliest Expected Date</label>
-          <input class="form-input" type="date" v-model="selectedBooking.earliestExpectedDate">
-
-          <label>Lastest Expected Date</label>
-          <input class="form-input" type="date" v-model="selectedBooking.lastestExpectedDate">
-
-          <label>Delivery Mode</label>
-          <select v-model="selectedBooking.deliveryMode" class="form-input">
-            <option value="ROAD">Road</option>
-            <option value="RAIL">Rail</option>
-            <option value="OTHER">Other</option>
-          </select>
-
-          <label>Delivery Description</label>
-          <textarea cols="5" rows="10" class="form-input" v-model="selectedBooking.deliveryDescription">
+          <div class="form-group">
+            <label>Booking Slip No <span>*</span></label>
+            <input class="form-input" type="text" v-model="selectedBooking.bookingSlipNo">
+            <span v-if="formError.bookingSlipNo" class="mb-2">
+            {{ formError.bookingSlipNo }}
+          </span>
+          </div>
+          <div class="form-group">
+            <label>Grower Category <span>*</span></label>
+            <select v-model="selectedBooking.growerCategory" class="form-input">
+              <option value="FARMER">Farmer</option>
+              <option value="COOPERATIVE">Cooperative</option>
+            </select>
+            <span v-if="formError.growerCategory" class="mb-2">
+            {{ formError.growerCategory }}
+          </span>
+          </div>
+          <div class="form-group">
+            <label>Grower Code <span>*</span></label>
+            <input class="form-input" type="text" v-model="selectedBooking.growerCode">
+            <span v-if="formError.growerCode" class="mb-2">
+            {{ formError.growerCode }}
+          </span>
+          </div>
+          <div class="form-group">
+            <label>Earliest Expected Date <span>*</span></label>
+            <input class="form-input" type="date" v-model="selectedBooking.earliestExpectedDate">
+            <span v-if="formError.earliestExpectedDate" class="mb-2">
+            {{ formError.earliestExpectedDate }}
+          </span>
+          </div>
+          <div class="form-group">
+            <label>Lastest Expected Date <span>*</span></label>
+            <input class="form-input" type="date" v-model="selectedBooking.lastestExpectedDate">
+            <span v-if="formError.lastestExpectedDate" class="mb-2">
+            {{ formError.lastestExpectedDate }}
+          </span>
+          </div>
+          <div class="form-group">
+            <label>Delivery Mode</label>
+            <select v-model="selectedBooking.deliveryMode" class="form-input">
+              <option value="ROAD">Road</option>
+              <option value="RAIL">Rail</option>
+              <option value="OTHER">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Delivery Description</label>
+            <textarea cols="10" rows="5" class="form-input" v-model="selectedBooking.deliveryDescription">
           </textarea>
-
+          </div>
         </div>
         <div class="col-md-6">
-          <label>Receiving Branch</label>
-          <select v-model="selectedBooking.receivingBranchCode" class="form-input">
-            <option v-for="branch in branches" :value="branch.branchCode" :key="branch.branchCode">
-              {{ branch.branchName }}
-            </option>
-          </select>
-          <h6 class="text-center mb-2">Quantity</h6>
+          <div class="form-group">
+            <label>Receiving Branch <span>*</span></label>
+            <select v-model="selectedBooking.receivingBranchCode" class="form-input">
+              <option v-for="branch in branches" :value="branch.branchCode" :key="branch.branchCode">
+                {{ branch.branchName }}
+              </option>
+            </select>
+            <span v-if="formError.receivingBranchCode" class="mb-2">
+            {{ formError.receivingBranchCode }}
+          </span>
+          </div>
+          <div>
+            <h6 class="text-center mb-2">Quantity <span>*</span></h6>
+            <label>Coffee Type</label>
+            <select v-model="coffee.type" class="form-input">
+              <option v-for="type in coffeeTypes" :value="type.coffeeType" :key="type.coffeeType">
+                {{ type.coffeeType }}
+              </option>
+            </select>
 
-          <label>Coffee Type</label>
-          <select v-model="coffee.type" class="form-input">
-            <option v-for="type in coffeeTypes" :value="type.coffeeType" :key="type.coffeeType">
-              {{ type.coffeeType }}
-            </option>
-          </select>
-
-          <label>No. of Bags</label>
-          <input class="form-input" type="text" v-model="coffee.bags">
-          <div class="row d-flex justify-content-end m-2">
-            <a-button type="primary" class="float-right" :disabled="!canAddCoffee" :loading="loading" @click="addCoffee"
-                      :small="true">
-              Add Coffee
-            </a-button>
+            <label>No. of Bags</label>
+            <input class="form-input" type="text" v-model="coffee.bags">
+            <div class="row d-flex justify-content-end m-2">
+              <a-button type="primary" class="float-right" :disabled="!canAddCoffee" :loading="loading"
+                        @click="addCoffee"
+                        :small="true">
+                Add Coffee
+              </a-button>
+            </div>
           </div>
           <div class="my-3">
             <custom-container :initialItems="bookedCoffeeTypes" :type="'coffee-container'"
                               :units="'bags'" @delete="deleteCoffee"></custom-container>
           </div>
-
+          <span v-if="formError.expectedQuantity" class="mb-2">
+            {{ formError.expectedQuantity }}
+          </span>
         </div>
       </div>
 
@@ -145,7 +206,7 @@
         <a-button key="back" @click="handleCancel('edit')">
           Cancel
         </a-button>
-        <a-button key="submit" type="primary" :loading="edit_loading" @click="editBooking"
+        <a-button key="submit" type="primary" :loading="edit_loading" @click="editBooking" :disabled="!canEdit"
                   v-if="selectedBooking.status==='PENDING'">
           Edit Booking
         </a-button>
@@ -217,7 +278,7 @@
         <a-button key="back" @click="handleCancel('approve')">
           Cancel
         </a-button>
-        <a-button key="submit" type="primary" @click="approveBooking" :disabled="!comment.approve">
+        <a-button key="submit" type="primary" @click="approveBooking(true)" :disabled="!comment.approve">
           Approve
         </a-button>
       </template>
@@ -434,14 +495,41 @@ export default {
       itemsPerPage: 0,
       coffee: {},
       bookedCoffeeTypes: [],
-      selectedBooking: {}
+      selectedBooking: {},
+      formError: {}
     }
   },
   computed: {
     ...mapGetters({
       branches: 'branches',
       coffeeTypes: 'coffeeTypes'
-    })
+    }),
+    canEdit () {
+      return this.selectedBooking.bookingSlipNo &&
+        this.selectedBooking.bookingSlipNo.trim().length > 0 &&
+        this.selectedBooking.growerCategory &&
+        this.selectedBooking.growerCategory.trim().length > 0 &&
+        this.selectedBooking.earliestExpectedDate &&
+        this.selectedBooking.earliestExpectedDate.trim().length > 3 &&
+        this.selectedBooking.lastestExpectedDate &&
+        this.selectedBooking.lastestExpectedDate.trim().length > 3 &&
+        this.selectedBooking.receivingBranchCode &&
+        this.selectedBooking.receivingBranchCode.trim().length > 0 &&
+        this.bookedCoffeeTypes.length > 0
+    },
+    canSave () {
+      return this.form.bookingSlipNo &&
+        this.form.bookingSlipNo.trim().length > 0 &&
+        this.form.growerCategory &&
+        this.form.growerCategory.trim().length > 0 &&
+        this.form.earliestExpectedDate &&
+        this.form.earliestExpectedDate.trim().length > 3 &&
+        this.form.lastestExpectedDate &&
+        this.form.lastestExpectedDate.trim().length > 3 &&
+        this.form.receivingBranchCode &&
+        this.form.receivingBranchCode.trim().length > 0 &&
+        this.bookedCoffeeTypes.length > 0
+    }
   },
   watch: {
     coffee: {
@@ -452,7 +540,115 @@ export default {
           (this.coffee.type.length > 1))
       },
       deep: true
-    }
+    },
+    'form.bookingSlipNo': {
+      handler: function () {
+        this.formError.bookingSlipNo = !this.form.bookingSlipNo || this.form.bookingSlipNo.trim().length < 1
+          ? 'Please enter valid booking slip no.'
+          : null
+      },
+      deep: true
+    },
+    'form.growerCategory': {
+      handler: function () {
+        console.log('changed')
+        this.formError.growerCategory = !this.form.growerCategory || this.form.growerCategory.trim().length < 1
+          ? 'Please select a valid category slip no.'
+          : null
+      },
+      deep: true
+    },
+    'form.growerCode': {
+      handler: function () {
+        this.formError.growerCode = !this.form.growerCode || this.form.growerCode.trim().length < 1
+          ? 'Please select a valid category slip no.'
+          : null
+      },
+      deep: true
+    },
+    'form.earliestExpectedDate': {
+      handler: function () {
+        this.formError.earliestExpectedDate = !this.form.earliestExpectedDate || this.form.earliestExpectedDate.trim().length < 3
+          ? 'Please select a valid date.'
+          : null
+      },
+      deep: true
+    },
+    'form.lastestExpectedDate': {
+      handler: function () {
+        this.formError.lastestExpectedDate = !this.form.lastestExpectedDate || this.form.lastestExpectedDate.trim().length < 3
+          ? 'Please select a valid date.'
+          : null
+      },
+      deep: true
+    },
+    'form.receivingBranchCode': {
+      handler: function () {
+        this.formError.receivingBranchCode = !this.form.receivingBranchCode || this.form.receivingBranchCode.trim().length < 1
+          ? 'Please select a branch.'
+          : null
+      },
+      deep: true
+    },
+
+    'selectedBooking.bookingSlipNo': {
+      handler: function () {
+        this.formError.bookingSlipNo = !this.selectedBooking.bookingSlipNo || this.selectedBooking.bookingSlipNo.trim().length < 1
+          ? 'Please enter valid booking slip no.'
+          : null
+      },
+      deep: true
+    },
+    'selectedBooking.growerCategory': {
+      handler: function () {
+        console.log('changed')
+        this.formError.growerCategory = !this.selectedBooking.growerCategory || this.selectedBooking.growerCategory.trim().length < 1
+          ? 'Please select a valid category slip no.'
+          : null
+      },
+      deep: true
+    },
+    'selectedBooking.growerCode': {
+      handler: function () {
+        this.formError.growerCode = !this.selectedBooking.growerCode || this.selectedBooking.growerCode.trim().length < 1
+          ? 'Please select a valid category slip no.'
+          : null
+      },
+      deep: true
+    },
+    'selectedBooking.earliestExpectedDate': {
+      handler: function () {
+        this.formError.earliestExpectedDate = !this.selectedBooking.earliestExpectedDate || this.selectedBooking.earliestExpectedDate.trim().length < 3
+          ? 'Please select a valid date.'
+          : null
+      },
+      deep: true
+    },
+    'selectedBooking.lastestExpectedDate': {
+      handler: function () {
+        this.formError.lastestExpectedDate = !this.selectedBooking.lastestExpectedDate || this.selectedBooking.lastestExpectedDate.trim().length < 3
+          ? 'Please select a valid date.'
+          : null
+      },
+      deep: true
+    },
+    'selectedBooking.receivingBranchCode': {
+      handler: function () {
+        this.formError.receivingBranchCode = !this.selectedBooking.receivingBranchCode || this.selectedBooking.receivingBranchCode.trim().length < 1
+          ? 'Please select a branch.'
+          : null
+      },
+      deep: true
+    },
+    bookedCoffeeTypes: {
+      handler: function () {
+        this.formError.expectedQuantity = !this.bookedCoffeeTypes || this.bookedCoffeeTypes.length < 1
+          ? 'Add some coffee to continue with booking'
+          : null
+      },
+      deep: true
+    },
+
   },
   mounted () {
     this.itemsPerPage = 10
@@ -495,16 +691,20 @@ export default {
         this.bookingFilter.startDate = 'null'
         this.bookingFilter.endDate = 'null'
       } else {
-        if (this.bookingFilter.date_option !== 'custom') {
+        if (this.bookingFilter.date_option === 'null') {
+          this.bookingFilter.startDate = 'null'
+          this.bookingFilter.endDate = 'null'
+          this.bookingFilter.asAtDate = 'null'
+        } else if (this.bookingFilter.date_option === 'weekly') {
           this.bookingFilter.startDate = moment(this.bookingFilter.startDate).format('DD-MM-YYYY')
           this.bookingFilter.endDate = 'null'
-        } else {
+        } else if (this.bookingFilter.date_option === 'custom') {
           this.bookingFilter.startDate = moment(this.bookingFilter.startDate).format('DD-MM-YYYY')
           this.bookingFilter.endDate = moment(this.bookingFilter.endDate).format('DD-MM-YYYY')
           this.bookingFilter.asAtDate = 'null'
         }
       }
-      let query = 'api/booking/v1/book' + pre
+      let query = 'api/booking/v1/coffee/book' + pre
       let i = 0
       for (const property in filters) {
         if (filters[property] !== 'null' && property !== 'date_option' && property !== 'booking_type') {
@@ -516,9 +716,8 @@ export default {
           i++
         }
       }
-      if (i !== 0) {
-        this.getBookings(query)
-      }
+      console.log(query)
+      this.getBookings(query)
     },
     deleteCoffee (id) {
       this.bookedCoffeeTypes = this.bookedCoffeeTypes.filter(coffee => coffee.id !== id)
@@ -548,18 +747,16 @@ export default {
     async updateSelect () {
       this.bookedCoffeeTypes = await this.createIds(this.bookedCoffeeTypes)
       eventBus.$emit('updateSelectData', this.bookedCoffeeTypes)
-    }
-    ,
+    },
     viewDetails (booking) {
       this.selectedBooking = Object.assign({}, booking)
       this.show_modal_view = true
-    }
-    ,
+    },
     approveBooking (approved = true) {
-      let booking = this.selectedBooking
+      const booking = this.selectedBooking
       const saveData = {
         bookingId: booking.bookingId,
-        approved: approved,
+        approved: approved === true,
         comment: approved ? this.comment.approve : this.comment.reject,
         bookingSlipNo: booking.bookingSlipNo
       }
@@ -567,9 +764,16 @@ export default {
       API.post('api/booking/v1/coffee/book/approve', saveData)
         .then(res => {
           if (res.data.status === 0) {
+            let msg = ''
+            if (approved) {
+              msg = 'Booking approved successfully'
+            } else {
+              msg = 'Booking rejected successfully'
+            }
             notification.success({
-              message: 'Booking approved successfully'
+              message: msg
             })
+            this.getBookings()
           } else {
             notification.error({
               message: 'Booking approval failed'
@@ -579,24 +783,20 @@ export default {
         .catch(err => {
           console.log('approve error', err)
         })
-    }
-    ,
+    },
     showApprove (booking, approved = true) {
       this.selectedBooking = booking
       approved ? this.approve_modal = true : this.reject_modal = true
-    }
-    ,
+    },
     async showEditModal () {
       this.bookedCoffeeTypes = Object.assign([], this.selectedBooking.expectedQuantity)
       this.bookedCoffeeTypes = await this.createIds(this.bookedCoffeeTypes)
       this.show_modal_edit = true
-    }
-    ,
+    },
     showModal () {
       this.bookedCoffeeTypes = []
       this.show_modal = true
-    }
-    ,
+    },
     handleCancel (type) {
       if (type === 'edit') {
         this.show_modal_edit = false
@@ -609,8 +809,7 @@ export default {
       } else {
         this.show_modal = false
       }
-    }
-    ,
+    },
     getBookings (query = null) {
       let api = 'api/booking/v1/coffee/book'
       if (query != null) {
@@ -624,8 +823,7 @@ export default {
         .catch(error => {
           console.log(error)
         })
-    }
-    ,
+    },
     createBooking () {
       this.loading = true
       const expectedQuantity = Object.assign([], this.bookedCoffeeTypes.map(function (item) {
@@ -646,17 +844,22 @@ export default {
             this.show_modal = false
           } else {
             notification.error({
-              message: 'Booking update failed.'
+              message: 'Booking save failed.'
             })
           }
           this.loading = false
         })
-        .catch(error => {
+        .catch((res, err) => {
+          let msg = 'An error occurred'
+          if (res.message.indexOf('earliestExpectedDate')) {
+            msg = 'invalid dates please change the dates.'
+          }
+          notification.error({
+            message: msg
+          })
           this.loading = false
-          this.feedback = error.response.data.message
         })
-    }
-    ,
+    },
     editBooking () {
       this.edit_loading = true
       const expectedQuantity = Object.assign([], this.bookedCoffeeTypes.map(function (item) {
@@ -687,8 +890,7 @@ export default {
           this.edit_loading = false
           this.feedback = error.response.data.message
         })
-    }
-    ,
+    },
     showDeleteConfirm (id) {
       this.$confirm({
         title: 'Confirm Approval?',
@@ -718,7 +920,10 @@ export default {
 }
 </script>
 
-<style lang="sass">
+<style lang="sass" scoped>
+.form-content span
+  color: red
+
 .filter-container
   display: flex
   @media only screen and (max-width: 450px)
