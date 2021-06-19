@@ -5,8 +5,11 @@
 
 .active
   border-left: 10px solid $color-orange
+
 .active, .side-nav-item:hover
-  background-color: $background-color
+  //background-color: $background-color
+  .collapse-label
+    font-weight: bold
 
   .item-icon
     color: black
@@ -15,16 +18,17 @@
     color: black
 
 .sidenav
-  width: 55px
+  width: 60px
   position: fixed
   z-index: 2
   top: 0
   left: 0
   transition: 0.5s
   height: 100vh
+  background-color: $nav-head
 
   .side-top
-    background-color: $background-color
+    background-color: transparent
 
     .side-header
       text-align: center
@@ -49,7 +53,7 @@
           margin-left: 10px
           font-size: 16px
           font-weight: bold
-          color: $secondary-color
+          color: black
 
       .close-btn
         color: black
@@ -78,13 +82,15 @@
     text-align: center
     color: $color-black
 
+  .border-80
+    border-top-right-radius: 80px !important
+
   .content-body
-    background-color: $secondary-color
+    background-color: $menu-color
     overflow-y: auto
-    border-top-right-radius: 40px
+    border-top-right-radius: 30px
 
     .content-wrap
-      background-color: $secondary-color
       margin-top: 10px
       height: 100vh
 
@@ -96,7 +102,6 @@
           padding: 10px 5px
           align-items: center
           color: $link-color
-          font-weight: bold
           cursor: pointer
 
           .item-icon
@@ -104,6 +109,7 @@
             height: 30px
             @include center-hor-ver
             margin-right: 10px
+
             img
               height: 30px
               width: 30px
@@ -118,7 +124,7 @@
   max-height: 80px
   width: 100%
   padding: 20px 30px 20px 90px
-  background-color: $background-color
+  background-color: $nav-head
   z-index: 2
   @include center-hor
 
@@ -166,7 +172,7 @@
         margin-left: 10px
         font-size: 30px
         font-weight: bold
-        color: $secondary-color
+        color: black
 
   .right-side
     @include center-hor

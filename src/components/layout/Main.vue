@@ -36,7 +36,7 @@
           </a-popover>
         </div>
       </div>
-      <hr>
+<!--      <hr>-->
     </div>
     <div id="mySidenav" class="sidenav">
       <div class="side-top">
@@ -66,7 +66,7 @@
           </div>
         </div>
       </div>
-      <div class="content-body">
+      <div class="content-body" :class="{'border-80':toggle}">
         <div id="content-wrap" class="content-wrap">
           <div class="side-nav-item active">
             <router-link to="/dash">
@@ -117,16 +117,26 @@
             </router-link>
           </div>
           <div class="side-nav-item">
-            <router-link to="/user-management">
-              <div class="collapse-label">
-                <div class="item-icon">
-                  <img src="../../assets/icons/usermanagement.svg" alt="">
+            <div class="tab">
+              <input type="checkbox" id="user">
+              <label class="tab-label" for="user">
+                <div class="collapse-label">
+                  <div class="item-icon">
+                    <img src="../../assets/icons/usermanagement.svg" alt="">
+                  </div>
+                  <div class="item-label" v-if="toggle">
+                    User Management
+                  </div>
                 </div>
-                <div class="item-label" v-if="toggle">
-                  User Management
-                </div>
+              </label>
+              <div class="tab-content">
+                <router-link to="/users"><p>Users</p></router-link>
+                <router-link to="/departments"><p>Departments</p></router-link>
+                <router-link to="/branches"><p>Branches</p></router-link>
+                <router-link to="/permissions"><p>Permissions</p></router-link>
+                <router-link to="/roles"><p>User Groups</p></router-link>
               </div>
-            </router-link>
+            </div>
           </div>
           <div class="side-nav-item">
             <router-link to="/system-configurations">
@@ -202,7 +212,7 @@ export default {
       } else {
         if (this.screenWidth > 450) {
           document.getElementById('main').style.marginLeft = '55px'
-          document.getElementById('mySidenav').style.width = '55px'
+          document.getElementById('mySidenav').style.width = '60px'
         } else {
           document.getElementById('main').style.marginLeft = '0px'
           document.getElementById('mySidenav').style.width = '0px'
