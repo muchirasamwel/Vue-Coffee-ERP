@@ -1,6 +1,10 @@
 @import "mixins"
 @import "variables"
-
+@mixin label-style
+  padding: 3px 7px
+  font-size: 12px
+  border-radius: 10px
+  border: 1px solid
 .tx-center
   text-align: center
 
@@ -26,11 +30,26 @@
 .more-info-details
   font-weight: bolder
 
+.status_pending
+  color: black
+  background: rgba(black,.08)
+  @include label-style
+  &_text
+    color: black
+
 .status_approved
   color: $secondary-color
+  background: rgba($secondary-color,.08)
+  @include label-style
+  &_text
+    color: $secondary-color
 
 .status_rejected
   color: $danger-color
+  background: rgba($danger-color,.08)
+  @include label-style
+  &_text
+    color: $danger-color
 
 .search-input
   border: 1px solid #e3e6eb
