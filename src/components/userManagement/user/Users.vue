@@ -191,12 +191,12 @@
               {{ props.rowData.firstName }} {{ props.rowData.lastName }}
             </template>
             <template slot="status" slot-scope="props">
-              <a-tag color="green" v-if="props.rowData.status === 'Active'">
+              <label class="status_approved" v-if="props.rowData.status === 'Active'">
                 active
-              </a-tag>
-              <a-tag color="red" v-else>
+              </label>
+              <label class="status_rejected" v-else>
                 inactive
-              </a-tag>
+              </label>
             </template>
             <template slot="action" slot-scope="props">
               <a-button class="ant-btn ant-btn-sm mb-3" v-if="isSmallDevice" @click="showActions=!showActions">...

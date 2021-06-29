@@ -268,7 +268,7 @@
     <!--    show-->
     <!--approve-->
     <a-modal v-model="approve_modal" centered title="Confirm Approval">
-      <div class="font-weight-bolder status_approved">Approve this booking?</div>
+      <div class="font-weight-bolder status_approved_text">Approve this booking?</div>
       <div>
         <label>Comment</label>
         <textarea cols="10" rows="5" class="form-input" v-model="comment.approve">
@@ -287,7 +287,7 @@
 
     <!--reject-->
     <a-modal v-model="reject_modal" centered title="Confirm Reject">
-      <div class="font-weight-bolder status_rejected">Reject this booking?</div>
+      <div class="font-weight-bolder status_rejected_text">Reject this booking?</div>
       <div>
         <label>Comment</label>
         <textarea cols="10" rows="5" class="form-input" v-model="comment.reject">
@@ -370,7 +370,7 @@
                     @vuetable:pagination-data="onPaginationData">
             <template slot="status" slot-scope="props">
               <label
-                :class="{'status_approved':props.rowData.status=='APPROVED','status_rejected':props.rowData.status=='REJECTED'}">
+                :class="{'status_approved':props.rowData.status=='APPROVED','status_rejected':props.rowData.status=='REJECTED','status_pending':props.rowData.status=='PENDING'}">
                 {{ props.rowData.status }}
               </label>
             </template>
