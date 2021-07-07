@@ -117,6 +117,11 @@ const routes = [
         name: 'regions',
         component: () => import('../components/systemConfigurations/regions/index')
       },
+      {
+        path: '/coffee-weighing',
+        name: 'coffee_weighing',
+        component: () => import('../components/weighbridge/index')
+      },
 
     ]
   }

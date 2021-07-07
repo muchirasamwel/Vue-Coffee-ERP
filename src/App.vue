@@ -10,13 +10,13 @@ export default {
 
 <style lang="scss">
 #app {
-  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,PingFang SC,Hiragino Sans GB,Microsoft YaHei,Helvetica Neue,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
+  font-family: 'Montserrat', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
 }
 #nprogress .bar {
-  background: #1fd242 !important;
+  background: #008cff !important;
   height: 4px !important;
 }
 #nprogress .spinner-icon{

@@ -5,6 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <link rel="preload" as="font" href="./fonts/Montserrat/Montserrat-Regular.ttf"
+          crossorigin="anonymous">
     <link rel="stylesheet" href="index.css">
     <title><%= htmlWebpackPlugin.options.title %></title>
 </head>
@@ -26,7 +28,8 @@
             </div>
         </div>
         <div class="loader-footer">
-            &#169;2021 Coffee ERP.
+            &#169;<script type="text/javascript"> document.write(new Date().getFullYear())</script>
+          Coffee ERP.
         </div>
     </div>
 </div>

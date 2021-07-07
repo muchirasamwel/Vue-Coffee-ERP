@@ -10,10 +10,16 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import VueEvents from 'vue-events'
 import { Button, Modal, notification } from 'ant-design-vue'
+import mdiVue from 'mdi-vue/v2'
+import * as mdijs from '@mdi/js'
 
 window.Vue = Vue
 
 require('./component')
+
+Vue.use(mdiVue, {
+  icons: mdijs
+})
 Vue.use(Button, Modal, notification)
 Vue.prototype.$confirm = Modal.confirm
 // Vue.prototype.$message = message

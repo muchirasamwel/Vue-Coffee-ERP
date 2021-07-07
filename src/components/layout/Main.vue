@@ -72,7 +72,8 @@
             <router-link to="/dash">
               <div class="collapse-label">
                 <div class="item-icon">
-                  <img src="../../assets/icons/auctionsale.svg" alt="">
+                  <mdicon name="speedometer" />
+<!--                  <img src="../../assets/icons/auctionsale.svg" alt="">-->
                 </div>
                 <div class="item-label" v-if="toggle">
                   Dashboard
@@ -84,7 +85,9 @@
             <router-link to="/farmers">
               <div class="collapse-label">
                 <div class="item-icon">
-                  <img src="../../assets/icons/farmers.svg" alt="">
+                  <mdicon name="account-cowboy-hat" />
+
+                  <!--                  <img src="../../assets/icons/farmers.svg" alt="">-->
                 </div>
                 <div class="item-label" v-if="toggle">
                   Farmer
@@ -96,7 +99,8 @@
             <router-link to="/cooperatives">
               <div class="collapse-label">
                 <div class="item-icon">
-                  <img src="../../assets/icons/inventory.svg" alt="">
+                  <mdicon name="account-group" />
+                  <!--                  <img src="../../assets/icons/inventory.svg" alt="">-->
                 </div>
                 <div class="item-label" v-if="toggle">
                   Corporatives
@@ -108,7 +112,7 @@
             <router-link to="/booking">
               <div class="collapse-label">
                 <div class="item-icon">
-                  <img src="../../assets/icons/Booking.svg" alt="">
+                  <mdicon name="bookmark" />
                 </div>
                 <div class="item-label" v-if="toggle">
                   Booking
@@ -122,7 +126,7 @@
               <label class="tab-label" for="user">
                 <div class="collapse-label">
                   <div class="item-icon">
-                    <img src="../../assets/icons/usermanagement.svg" alt="">
+                    <mdicon name="account-supervisor" />
                   </div>
                   <div class="item-label" v-if="toggle">
                     User Management
@@ -139,10 +143,21 @@
             </div>
           </div>
           <div class="side-nav-item">
+            <router-link to="/coffee-weighing">
+              <div class="collapse-label">
+                <div class="item-icon">
+                  <mdicon name="eye" />
+                </div>
+                <div class="item-label" v-if="toggle">Outturn
+                </div>
+              </div>
+            </router-link>
+          </div>
+          <div class="side-nav-item">
             <router-link to="/system-configurations">
               <div class="collapse-label">
                 <div class="item-icon">
-                  <img src="../../assets/icons/sortex.svg" alt="">
+                  <mdicon name="cogs" />
                 </div>
                 <div class="item-label" v-if="toggle">System
                 </div>

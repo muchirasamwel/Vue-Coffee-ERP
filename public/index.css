@@ -4,7 +4,7 @@ body {
 }
 .initial-render {
     height: 100vh;
-    background: #1fd242;
+    background: #2bcc8c;
 
 }
 .initial-render .content {
@@ -24,7 +24,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Gayathri', sans-serif
+    font-family: 'Montserrat', sans-serif;
 }
 .loaders {
     margin: 0 auto;
@@ -42,7 +42,7 @@ body {
     align-items: center;
     color: white; bottom: 0;
     position: absolute; padding: 10px;
-    font-family: 'Gayathri', sans-serif;
+    font-family: 'Montserrat', sans-serif;
 }
 @keyframes d3 {
     20% {
