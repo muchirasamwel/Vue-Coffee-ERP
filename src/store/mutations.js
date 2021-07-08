@@ -22,13 +22,13 @@ let mutations = {
     })
   },
 
-  FETCH_COFFEE_TYPES (state) {
-    API.get('api/booking/v1/coffeeTypes')
+  async FETCH_COFFEE_TYPES (state) {
+    await API.get('api/booking/v1/coffeeTypes')
       .then(res => {
         state.coffeeTypes = res.data
       }).catch(err => {
-      console.log('fetch coffee type error', err)
-    })
+        console.log('fetch coffee type error', err)
+      })
   },
 }
 export default mutations
