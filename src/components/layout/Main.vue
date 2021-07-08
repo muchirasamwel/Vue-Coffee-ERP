@@ -61,7 +61,7 @@
         <div>
           <div v-if="toggle">
             <div class="sub-dept">
-              Corporative Name
+              Cooperative Name
             </div>
           </div>
         </div>

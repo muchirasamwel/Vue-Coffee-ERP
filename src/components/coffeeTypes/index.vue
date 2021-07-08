@@ -25,7 +25,7 @@
           Cancel
         </a-button>
         <a-button key="submit" type="primary" :loading="loading" @click="addCoffeeType">
-          Add Cooperative
+          Add Grade
         </a-button>
       </template>
     </a-modal>
@@ -33,7 +33,7 @@
     <button class="the-btn sec-color px-3 my-3" @click="add_coffee_type_modal=true">Add Coffee Types</button>
 
     <div>
-      <vuetable ref="types_vuetable"
+      <vuetable ref="vuetable"
                 :api-mode="false"
                 :fields="fields"
                 :per-page="itemsPerPage"
@@ -77,6 +77,8 @@ export default {
   data () {
     return {
       form: {},
+      tableState: {},
+      itemsPerPage: 10,
       loading: false,
       add_coffee_type_modal: false,
       fields: [
@@ -126,7 +128,7 @@ export default {
         )
       }
 
-      pagination = this.$refs.types_vuetable.makePagination(
+      pagination = this.$refs.vuetable.makePagination(
         local.length,
         this.itemsPerPage
       )
@@ -139,21 +141,19 @@ export default {
         data: _.slice(local, from, to)
       }
     },
-    addCoffeeType () {
+    async addCoffeeType () {
       this.loading = true
       const payload = Object.assign({}, this.form)
-      API.post('api/booking/v1/coffeeTypes', payload)
+      await API.post('api/booking/v1/coffeeTypes', payload)
         .then(res => {
           if (res.data.status === 0) {
             notification.success({
               message: 'Coffee type added successfully'
             })
-            this.$store.commit('FETCH_COFFEE_TYPES')
           } else {
             notification.error({
               message: 'An error occurred when adding coffee type'
             })
-            console.log(res.data)
           }
           this.loading = false
         })
@@ -161,6 +161,8 @@ export default {
           this.loading = false
           console.log('post error' + err)
         })
+      await this.$store.commit('FETCH_COFFEE_TYPES')
+      this.$refs.vuetable.reload()
     }
   },
   created () {
