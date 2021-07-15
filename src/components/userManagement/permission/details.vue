@@ -99,11 +99,7 @@ export default {
   methods: {
     getPermission (id) {
       this.loading = true
-      API.get('api/usermanagement/v1/permissions', {
-        params: {
-          permissionId: id
-        }
-      })
+      API.get('api/usermanagement/v1/permissions/'+id)
         .then(response => {
           this.permission = response.data
           this.loading = false
