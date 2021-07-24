@@ -15,13 +15,17 @@
   //font-weight: bold
   cursor: pointer
   min-width: 190px
+  margin: 0px !important
 
   &::after
     content: "\2192"
     text-align: center
     transition: all 0.5s
     color: white
-
+.active
+  .tab-content
+    a
+      color: $secondary-color
 .tab-content
   max-height: 0
   text-align: left
@@ -29,7 +33,7 @@
   transition: all 1s
   padding-left: 60px
   a
-    color: black
+    color: $link-color
 
 .tab-close
   display: flex

@@ -24,7 +24,7 @@
               </a-tooltip>
             </div>
           </router-link>
-          <a-popover title="cetric"  placement="bottomRight" trigger="click">
+          <a-popover title="cetric" placement="bottomRight" trigger="click">
             <template slot="content">
               <p>My Profile</p>
               <p>Settings</p>
@@ -36,17 +36,17 @@
           </a-popover>
         </div>
       </div>
-<!--      <hr>-->
+      <hr>
     </div>
     <div id="mySidenav" class="sidenav">
       <div class="side-top">
         <div class="side-header">
           <div @click="toggleNav('open')" v-if="!toggle" class="toggle-icon">
-            <icon name="menu"/>
+            <icon name="menu" stroke="white"/>
           </div>
           <div class="close-icon-container">
             <div class="close-btn" @click="toggleNav('close')" v-if="toggle">
-              <icon @click="toggleNav('close')" v-if="toggle" name="x"/>
+              <icon @click="toggleNav('close')" v-if="toggle" name="x" stroke="white"/>
             </div>
           </div>
           <div class="brand-name" v-if="toggle">
@@ -69,100 +69,117 @@
       <div class="content-body" :class="{'border-80':toggle}">
         <div id="content-wrap" class="content-wrap">
           <div class="side-nav-item active">
-            <router-link to="/dash">
-              <div class="collapse-label">
-                <div class="item-icon">
-                  <mdicon name="speedometer" />
-<!--                  <img src="../../assets/icons/auctionsale.svg" alt="">-->
-                </div>
-                <div class="item-label" v-if="toggle">
-                  Dashboard
-                </div>
-              </div>
-            </router-link>
-          </div>
-          <div class="side-nav-item">
-            <router-link to="/farmers">
-              <div class="collapse-label">
-                <div class="item-icon">
-                  <mdicon name="account-cowboy-hat" />
-
-                  <!--                  <img src="../../assets/icons/farmers.svg" alt="">-->
-                </div>
-                <div class="item-label" v-if="toggle">
-                  Farmer
-                </div>
-              </div>
-            </router-link>
-          </div>
-          <div class="side-nav-item">
-            <router-link to="/cooperatives">
-              <div class="collapse-label">
-                <div class="item-icon">
-                  <mdicon name="account-group" />
-                  <!--                  <img src="../../assets/icons/inventory.svg" alt="">-->
-                </div>
-                <div class="item-label" v-if="toggle">
-                  Corporatives
-                </div>
-              </div>
-            </router-link>
-          </div>
-          <div class="side-nav-item">
-            <router-link to="/booking">
-              <div class="collapse-label">
-                <div class="item-icon">
-                  <mdicon name="bookmark" />
-                </div>
-                <div class="item-label" v-if="toggle">
-                  Booking
-                </div>
-              </div>
-            </router-link>
-          </div>
-          <div class="side-nav-item">
-            <div class="tab">
-              <input type="checkbox" id="user">
-              <label class="tab-label" for="user">
+            <div class="route-container">
+              <router-link to="/dash">
                 <div class="collapse-label">
                   <div class="item-icon">
-                    <mdicon name="account-supervisor" />
+                    <mdicon name="speedometer"/>
+                    <!--                  <img src="../../assets/icons/auctionsale.svg" alt="">-->
                   </div>
                   <div class="item-label" v-if="toggle">
-                    User Management
+                    Dashboard
                   </div>
                 </div>
-              </label>
-              <div class="tab-content">
-                <router-link to="/users"><p>Users</p></router-link>
-                <router-link to="/departments"><p>Departments</p></router-link>
-                <router-link to="/branches"><p>Branches</p></router-link>
-                <router-link to="/permissions"><p>Permissions</p></router-link>
-                <router-link to="/roles"><p>User Groups</p></router-link>
+              </router-link>
+            </div>
+          </div>
+          <div class="side-nav-item">
+            <div class="route-container">
+              <router-link to="/farmers">
+                <div class="collapse-label">
+                  <div class="item-icon">
+                    <mdicon name="account-cowboy-hat"/>
+
+                    <!--                  <img src="../../assets/icons/farmers.svg" alt="">-->
+                  </div>
+                  <div class="item-label" v-if="toggle">
+                    Farmer
+                  </div>
+                </div>
+              </router-link>
+            </div>
+          </div>
+          <div class="side-nav-item">
+            <div class="route-container">
+              <router-link to="/cooperatives">
+                <div class="collapse-label">
+                  <div class="item-icon">
+                    <mdicon name="account-group"/>
+                    <!--                  <img src="../../assets/icons/inventory.svg" alt="">-->
+                  </div>
+                  <div class="item-label" v-if="toggle">
+                    Corporatives
+                  </div>
+                </div>
+              </router-link>
+            </div>
+          </div>
+          <div class="side-nav-item">
+            <div class="route-container">
+              <router-link to="/booking">
+                <div class="collapse-label">
+                  <div class="item-icon">
+                    <mdicon name="bookmark"/>
+                  </div>
+                  <div class="item-label" v-if="toggle">
+                    Booking
+                  </div>
+                </div>
+              </router-link>
+            </div>
+          </div>
+          <div class="side-nav-item">
+            <div class="route-container">
+              <div class="tab">
+                <input type="checkbox" id="user">
+                <label class="tab-label" for="user">
+                  <div class="collapse-label">
+                    <div class="item-icon">
+                      <mdicon name="account-supervisor"/>
+                    </div>
+                    <div class="item-label" v-if="toggle">
+                      User Management
+                    </div>
+                  </div>
+                </label>
+                <div class="tab-content">
+                  <router-link to="/users"><p>Users</p></router-link>
+                  <router-link to="/departments"><p>Departments</p></router-link>
+                  <router-link to="/branches"><p>Branches</p></router-link>
+                  <router-link to="/permissions"><p>Permissions</p></router-link>
+                  <router-link to="/roles"><p>User Groups</p></router-link>
+                </div>
               </div>
             </div>
           </div>
           <div class="side-nav-item">
-            <router-link to="/coffee-weighing">
-              <div class="collapse-label">
-                <div class="item-icon">
-                  <mdicon name="eye" />
+            <div class="route-container">
+              <router-link to="/coffee-weighing">
+                <div class="collapse-label">
+                  <div class="item-icon">
+                    <mdicon name="eye"/>
+                  </div>
+                  <div class="item-label" v-if="toggle">Outturn
+                  </div>
                 </div>
-                <div class="item-label" v-if="toggle">Outturn
-                </div>
-              </div>
-            </router-link>
+              </router-link>
+            </div>
           </div>
           <div class="side-nav-item">
-            <router-link to="/system-configurations">
-              <div class="collapse-label">
-                <div class="item-icon">
-                  <mdicon name="cogs" />
+            <div class="route-container">
+              <router-link to="/system-configurations">
+                <div class="collapse-label">
+                  <div class="item-icon">
+                    <mdicon name="cogs"/>
+                  </div>
+                  <div class="item-label" v-if="toggle">System
+                  </div>
                 </div>
-                <div class="item-label" v-if="toggle">System
-                </div>
-              </div>
-            </router-link>
+              </router-link>
+            </div>
+          </div>
+          <div>
+            <div class="route-container empty-container"></div>
           </div>
         </div>
       </div>
@@ -176,8 +193,8 @@
 </template>
 
 <script>
-import {Popover, Tooltip, Avatar, BackTop} from 'ant-design-vue'
-import {mapGetters} from "vuex/dist/vuex.mjs";
+import { Popover, Tooltip, Avatar, BackTop } from 'ant-design-vue'
+import { mapGetters } from 'vuex/dist/vuex.mjs'
 
 export default {
   name: 'NavBar',
@@ -187,7 +204,7 @@ export default {
     'a-back-top': BackTop,
     'a-popover': Popover
   },
-  data() {
+  data () {
     return {
       toggle: false,
       screenWidth: '',
@@ -199,7 +216,7 @@ export default {
       'loggedInUser'
     ]),
   },
-  mounted() {
+  mounted () {
     const items = document.getElementsByClassName('side-nav-item')
     for (let i = 0; i < items.length; i++) {
       items[i].addEventListener('click', function () {
