@@ -2,22 +2,32 @@
 @import "variables"
 @mixin nav-shadow
   box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.1), 0 2px 10px 0 rgba(0, 0, 0, 0.19)
-
+.empty-container
+  height: 20px
 .active
-  border-left: 10px solid $color-orange
+  //border-left: 10px solid $color-orange
+div.active+div
+  background-color: $main-bg
+  .route-container
+    border-top-right-radius: 25px
+    background-color: $secondary-color
 
 .active, .side-nav-item:hover
-  //background-color: $background-color
+  background-color: $main-bg
+  border-top-left-radius: 25px
+  border-bottom-left-radius: 25px
   .collapse-label
     font-weight: bold
 
   .item-icon
-    color: black
+    color: $secondary-color
 
   .item-label
-    color: black
+    color: $secondary-color
 
 .sidenav
+  border-top-right-radius: 45px
+  border-bottom-right-radius: 45px
   width: 60px
   position: fixed
   z-index: 2
@@ -37,11 +47,12 @@
       .close-icon-container
         @include center-hor-ver
         justify-content: end
+        margin-right: 10px
 
       .brand-name
         padding: 0px 10px 0px 0px
         @include center-hor-ver
-        color: black
+        color: white
         justify-content: space-between
 
 
@@ -53,10 +64,9 @@
           margin-left: 10px
           font-size: 16px
           font-weight: bold
-          color: black
+          color: white
 
       .close-btn
-        color: black
         bottom: 40px
         cursor: pointer
         @include center-hor-ver
@@ -80,23 +90,21 @@
     height: 30px
     margin-bottom: 10px
     text-align: center
-    color: $color-black
+    color: white
 
   .border-80
-    border-top-right-radius: 80px !important
+    //border-top-right-radius: 80px !important
 
   .content-body
     background-color: $menu-color
     overflow-y: auto
-    border-top-right-radius: 30px
 
     .content-wrap
       margin-top: 10px
-      height: 100vh
 
       .side-nav-item
         padding: 0
-
+        margin-left: 5px
         .collapse-label
           display: flex
           padding: 10px 5px
@@ -124,7 +132,7 @@
   max-height: 80px
   width: 100%
   padding: 10px 30px 10px 90px
-  background-color: $nav-head
+  background-color: $main-bg
   z-index: 2
   @include center-hor
 
